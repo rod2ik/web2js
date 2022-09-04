@@ -153,7 +153,7 @@ parser.lexer = {
     var token = lexer.lex();
     last_token = token;
     this.yytext = lexer.text;
-    //console.log(lexer.text);
+    // console.log(lexer.text);
     return token;
     },
   setInput: function (str) {
@@ -162,7 +162,12 @@ parser.lexer = {
 
 var program = parser.parse();
 
+console.log("program", program);
+
 var module = program.generate();
+
+console.log("2");
+
 // Transcriptwrittenontexput.log.nodeinitex.js8.48suser0.73ssystem157%cpu5.832totalTranscript written on texput.log.node initex.js  8.48s user 0.73s system 157% cpu 5.832 total
 // module.runPasses(["remove-unused-brs","pick-load-signs","precompute","precompute-propagate","code-pushing","duplicate-function-elimination","inlining-optimizing","dae-optimizing","generate-stack-ir","optimize-stack-ir"]);
 
@@ -173,11 +178,12 @@ var module = program.generate();
 //module.optimize();
 
 // Validate the module
-//if (!module.validate())
+// if (!module.validate())
 //  throw new Error("validation error");
 
 
 fs.writeFileSync( process.argv[3], module.emitBinary() );
+
 
 console.log("Using ", program.memory.memorySize, "bytes" );
 var neededPages = Math.ceil(program.memory.memorySize / 65536);
