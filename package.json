@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "colors": "^1.4.0",
-    "glob": "^7.2.3",
+    "glob": "^11.0.0",
     "log-symbols": "^2.2.0"
   }
 }

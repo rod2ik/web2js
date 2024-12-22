@@ -30,3 +30,4 @@ latex.fmt
 *.p
 *.pool
 tex.web
+.vim
