@@ -16,12 +16,12 @@
     "binaryen": "^99.0.0",
     "flex-js": "^1.0.4",
     "jison": "^0.4.18",
-    "pegjs": "^0.10.0",
-    "node-kpathsea": "github:kisonecat/node-kpathsea"
+    "node-kpathsea": "github:kisonecat/node-kpathsea",
+    "pegjs": "^0.10.0"
   },
   "devDependencies": {
     "colors": "^1.4.0",
-    "glob": "^7.1.3",
+    "glob": "^7.2.3",
     "log-symbols": "^2.2.0"
   }
 }
