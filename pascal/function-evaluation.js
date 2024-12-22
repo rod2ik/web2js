@@ -115,6 +115,16 @@ module.exports = class FunctionEvaluation {
                           Binaryen.i32 );
     }
 
+    if (name.toLowerCase() == "getfilesize") {
+      this.type = new Identifier("integer");
+      
+      var filename = this.xs[0];
+      var filenameExp = filename.generate(environment);
+      return module.call( "getfilesize", [module.i32.const(filename.type.index.range()),
+                                            filename.variable.pointer()],
+                            Binaryen.i32 );
+    }
+ 
     var offset = 0;
     var commands = [];
     var stack = environment.program.stack;

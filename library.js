@@ -274,6 +274,44 @@ module.exports = {
 		return files.length - 1;
 	},
 
+	getfilesize: function(length, pointer) {
+		var buffer = new Uint8Array( memory, pointer, length );
+		var filename = String.fromCharCode.apply(null, buffer);
+
+		if (filename.startsWith('{')) {
+			filename = filename.replace(/^{/g,'');
+			filename = filename.replace(/}.*/g,''); 
+		}
+
+		filename = filename.replace(/ +$/g,'');
+		filename = filename.replace(/^\*/,'');
+
+		let format = FILE_FORMAT.TEX;
+		if (filename.startsWith('TeXfonts:')) {
+			filename = filename.replace(/^TeXfonts:/,'');
+			format = FILE_FORMAT.TFM;
+		}
+
+		if (filename == 'TeXformats:TEX.POOL') {
+			filename = "tex.pool";
+			format = FILE_FORMAT.TEXPOOL;
+		}
+
+		filename = kpse.findFile(filename, format);
+
+		if (filename) {
+			try {
+				var stats = fs.statSync(filename);
+
+				return stats.size;
+			} catch (e) {
+				return 0;
+			}
+		}
+
+		return 0;
+	},  
+
 	close: function(descriptor) {
 		var file = files[descriptor];
 

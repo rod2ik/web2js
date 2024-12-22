@@ -1,27 +1,28 @@
 {
-  "name": "web2js",
-  "version": "1.0.0",
-  "description": "Convert \"Pascal\" output of WEB into JavaScript",
-  "main": "index.js",
-  "scripts": {
-    "test": "node spec/run-tests.js",
-    "build": "jison parser.jison",
-    "generate-wasm": "tie -m tex.web texk/tex.web etexdir/etex.ch date.ch tex-final-end.ch inputln.ch tex.ch ord-chr.ch wordsize.ch && tangle -underline tex.web && node compile.js tex.p out.wasm",
-    "asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
-    "generate-core": "npm run build && npm run generate-wasm && npm run asyncify-wasm && node initex.js"
-  },
-  "author": "Jim Fowler",
-  "license": "GPL-3.0",
-  "dependencies": {
-    "binaryen": "^99.0.0",
-    "flex-js": "^1.0.4",
-    "jison": "^0.4.18",
-    "node-kpathsea": "github:kisonecat/node-kpathsea",
-    "pegjs": "^0.10.0"
-  },
-  "devDependencies": {
-    "colors": "^1.4.0",
-    "glob": "^11.0.0",
-    "log-symbols": "^2.2.0"
-  }
+    "name": "web2js",
+    "version": "1.0.0",
+    "description": "Convert \"Pascal\" output of WEB into JavaScript",
+    "main": "index.js",
+    "scripts": {
+        "test": "node spec/run-tests.js",
+        "build": "jison parser.jison",
+        "generate-wasm": "tie -m tex.web texk/tex.web etexdir/etex.ch date.ch tex-final-end.ch inputln.ch tex.ch ord-chr.ch wordsize.ch expand-depth-count.ch && tangle -underline tex.web && node compile.js tex.p out.wasm",
+        "asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
+		"initex": "node initex.js",
+        "generate-core": "npm run build && npm run generate-wasm && npm run asyncify-wasm && npm run initex"
+    },
+    "author": "Jim Fowler",
+    "license": "GPL-3.0",
+    "dependencies": {
+        "binaryen": "^99.0.0",
+        "flex-js": "^1.0.4",
+        "jison": "^0.4.18",
+        "node-kpathsea": "github:kisonecat/node-kpathsea",
+        "pegjs": "^0.10.0"
+    },
+    "devDependencies": {
+        "colors": "^1.4.0",
+        "glob": "^11.0.0",
+        "log-symbols": "^2.2.0"
+    }
 }
