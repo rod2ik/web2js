@@ -85,7 +85,7 @@ module.exports = class Program {
                               Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "getfilesize", "library", "getfilesize",
-                              Binaryen.createType(Binaryen.i32, [Binaryen.i32, Binaryen.i32] ) );
+                              Binaryen.createType([Binaryen.i32, Binaryen.i32]), Binaryen.i32 );
 
     module.addFunctionImport( "inputln", "library", "inputln",
                               Binaryen.createType([Binaryen.i32, Binaryen.i32, Binaryen.i32,

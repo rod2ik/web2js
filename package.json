@@ -6,7 +6,10 @@
     "scripts": {
         "test": "node spec/run-tests.js",
         "build": "jison parser.jison",
-        "generate-wasm": "tie -m tex.web texk/tex.web etexdir/etex.ch date.ch tex-final-end.ch inputln.ch tex.ch ord-chr.ch wordsize.ch expand-depth-count.ch && tangle -underline tex.web && node compile.js tex.p out.wasm",
+        "tie": "tie -m tex.web texk/tex.web $(cat changes/change-order)",
+		"tangle": "tangle -underline tex.web",
+		"compile": "node compile.js tex.p out.wasm",
+		"generate-wasm": "npm run tie && npm run tangle && npm run compile",
         "asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
 		"initex": "node initex.js",
         "generate-core": "npm run build && npm run generate-wasm && npm run asyncify-wasm && npm run initex"

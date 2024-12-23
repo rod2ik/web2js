@@ -223,7 +223,8 @@ module.exports = {
 		if (path == undefined) {
 			files.push({
 				filename: filename,
-				erstat: 1
+				erstat: 0,
+				eof: true
 			});
 			return files.length - 1;
 		}
@@ -353,9 +354,9 @@ module.exports = {
 		var last_nonblank = 0; // |last| with trailing blanks removed
 
 		var buffer = new Uint8Array( memory, bufferp, buf_size);
-		var first = new Uint32Array( memory, firstp, 4 );
-		var last = new Uint32Array( memory, lastp, 4 );
-		var max_buf_stack = new Uint32Array( memory, max_buf_stackp, 4 );
+		var first = new Uint32Array( memory, firstp, 1 );
+		var last = new Uint32Array( memory, lastp, 1 );
+		var max_buf_stack = new Uint32Array( memory, max_buf_stackp, 1 );
 
 		// cf.\ Matthew 19\thinspace:\thinspace30
 		last[0] = first[0];
@@ -368,6 +369,8 @@ module.exports = {
 				}
 			}
 		}
+
+		if (file.eof) return false;
 
 		let endOfLine = file.content.indexOf(10, file.position2);
 		if (endOfLine < 0) endOfLine = file.content.length;

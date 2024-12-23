@@ -86,7 +86,7 @@ module.exports = class FunctionEvaluation {
 
       return module.call( "eof", [file.generate(environment)],
                           Binaryen.i32 );
-    }    
+    }
 
     if (name.toLowerCase() == "inputln_actual") {
       this.type = new Identifier("boolean");

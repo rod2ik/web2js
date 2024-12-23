@@ -1,36 +1,41 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var library = require('./library');
+const fs = require('fs');
+const library = require('./library');
 
-var binary = fs.readFileSync('tex.wasm');
+const binary = fs.readFileSync('tex.wasm');
 
-var code = new WebAssembly.Module(binary);
+const code = new WebAssembly.Module(binary);
 
-var pages = require('./commonMemory').pages;
-var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
+const pages = require('./commonMemory').pages;
+const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
 library.setMemory(memory.buffer);
-library.setInput("\n*latex.ltx \\dump\n\n", function() {});
+library.setInput('\n*latex.ltx\n\\dump\n\n', function () {});
 
-var wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
+let wasm = new WebAssembly.Instance(code, { library: library, env: { memory } });
 library.setWasmExports(wasm.exports);
 
 wasm.exports.main();
 
 library.setMemory(memory.buffer);
-library.setInput(`\n&latex \\documentclass[margin=0pt]{standalone}\\def\\pgfsysdriver{pgfsys-ximera.def}
-\\usepackage[svgnames]{xcolor}\\usepackage{tikz}\n\n`,
-	function() {
-		library.tex_final_end();
-		var buffer = new Uint8Array(memory.buffer);
-		fs.writeFileSync('core.dump', buffer);
+library.setInput(
+    '\n&latex\n' +
+        '\\documentclass[margin=0pt]{standalone}\n' +
+        '\\def\\pgfsysdriver{pgfsys-ximera.def}\n' +
+        '\\usepackage[svgnames]{xcolor}\n' +
+        '\\usepackage{tikz}\n\n',
+    function () {
+        library.tex_final_end();
+        const buffer = new Uint8Array(memory.buffer);
+        fs.writeFileSync('core.dump', buffer);
 
-		// Save the files used to a json file.
-		let filesystem = library.getUsedFiles();
-		fs.writeFileSync('initex-files.json', JSON.stringify(filesystem, null, '\t'));
+        // Save the files used to a json file.
+        let filesystem = library.getUsedFiles();
+        fs.writeFileSync('initex-files.json', JSON.stringify(filesystem, null, '\t'));
 
-		process.exit();
-	});
+        process.exit();
+    }
+);
 
 wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
 library.setWasmExports(wasm.exports);
