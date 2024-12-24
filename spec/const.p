@@ -1,8 +1,11 @@
 program TEST;
-const x	= 500;
+
+const x = 500;
+
 var
-   i : integer;
+    i: integer;
+
 begin
-   i := 17 * x;
-   writeln(i);
+    i := 17 * x;
+    writeln(i);
 end.

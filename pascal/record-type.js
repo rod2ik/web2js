@@ -1,27 +1,24 @@
 'use strict';
 
 module.exports = class RecordType {
-  constructor(fields, packed) {
-    this.fields = fields;
-    this.packed = packed;
-  }
+    constructor(fields, packed) {
+        this.fields = fields;
+        this.packed = packed;
+    }
 
-  bytes(e) {
-    return this.fields
-      .map( function(f) { return f.bytes(e); } )
-      .reduce(function(a, b) { return a + b; }, 0);
-  }
+    bytes(e) {
+        return this.fields.map((f) => f.bytes(e)).reduce((a, b) => a + b, 0);
+    }
 
-  matches(other) {
-    return true;
-  }
-  
-  initializer(e) {
-    return "{}";
-  }
-  
-  generate(e) {
-    return `record(${this.fields.map( function(t) { if (Array.isArray(t)) return "???"; else return t.generate(e); } ).join(',')})`;
-  }
+    matches(_other) {
+        return true;
+    }
 
+    initializer(_e) {
+        return '{}';
+    }
+
+    generate(e) {
+        return `record(${this.fields.map((t) => (Array.isArray(t) ? '???' : t.generate(e))).join(',')})`;
+    }
 };

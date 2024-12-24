@@ -1,27 +1,26 @@
 'use strict';
-var Binaryen = require('binaryen');
-var Environment = require('./environment.js');
+const Environment = require('./environment.js');
 
 module.exports = class Block {
-  constructor(labels,consts,types,vars,compound) {
-    this.labels = labels;
-    this.consts = consts;
-    this.types = types;
-    this.vars = vars;
-    this.compound = compound;
-  }
-  
-  generate(environment) {
-    environment = new Environment(environment);
+    constructor(labels, consts, types, vars, compound) {
+        this.labels = labels;
+        this.consts = consts;
+        this.types = types;
+        this.vars = vars;
+        this.compound = compound;
+    }
 
-    this.consts.forEach( function(v) {
-      environment.constants[v.name] = v.expression;
-    });
+    generate(environment) {
+        environment = new Environment(environment);
 
-    this.types.forEach( function(t) {
-      environment.types[t.name] = t.expression;
-    });
-        
-    return this.compound.generate(environment);
-   }
-}
+        for (const v of this.consts) {
+            environment.constants[v.name] = v.expression;
+        }
+
+        for (const t of this.types) {
+            environment.types[t.name] = t.expression;
+        }
+
+        return this.compound.generate(environment);
+    }
+};

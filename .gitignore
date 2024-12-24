@@ -28,6 +28,7 @@ core.dump
 latex.fmt
 *.wasm
 *.p
+!spec/*.p
 *.pool
 tex.web
 .vim

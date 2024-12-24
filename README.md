@@ -4,19 +4,19 @@ This is a Pascal compiler that targets WebAssembly, designed specifically to com
 
 ## Getting started
 
-The following assumes you have TeX running on your machine (e.g., that `tangle` is available),
-and that you have the necessary TeX files installed on your system.
+The following assumes you have TeX running on your machine (e.g., that `tangle` is available), and that you have the
+necessary TeX files installed on your system.
 
 A quick path to generate the tex.wasm and core.dump files is
 
 ```sh
 npm install
-npm run generate-core
+npm run build
 ```
 
-Note that newer versions of TeX are not compatible with this system.  This is known to work with texlive 2019. Since
-this is not usually available on newer distributions of Linux a `Dockerfile` is included that provides a compatible
-Ubuntu 20.04 system to work with.  To build and run the docker container execute the following.
+Note that newer versions of TeX are not compatible with this system. This is known to work with texlive 2019. Since this
+is not usually available on newer distributions of Linux a `Dockerfile` is included that provides a compatible Ubuntu
+20.04 system to work with. To build and run the docker container execute the following.
 
 ```sh
 docker build -t web2js .
@@ -36,7 +36,7 @@ npm install
 Generate the Pascal parser.
 
 ```sh
-npm run build
+npm run build:parser
 ```
 
 The contents of the `texk` and `etexdir` subdirectories were simply copied from tug.org via
@@ -61,7 +61,7 @@ tangle -underline tex.web etex.sys
 
 You will now have the Pascal source `tex.p` along with `tex.pool` which contains the strings.
 
-Compile the `tex.p` sources to get the WebAssembly binary `out.wasm`
+Compile the `tex.p` sources to get the WebAssembly binary `out.wasm`.
 
 ```sh
 node compile.js tex.p out.wasm
@@ -70,7 +70,7 @@ node compile.js tex.p out.wasm
 The above three commands can all be run with
 
 ```sh
-npm run generate-wasm
+npm run build:wasm
 ```
 
 Then optimize and asyncify the wasm binary by running
@@ -79,11 +79,8 @@ Then optimize and asyncify the wasm binary by running
 wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm
 ```
 
-This assumes that wasm-opt is in your path.
-
-Note that if you want to unwind/rewind other imports in the library, remove
-the asyncify-imports part from the above command or specifically add the
-imports to that part.
+Note that if you want to unwind/rewind other imports in the library, remove the asyncify-imports part from the above
+command or specifically add the imports to that part.
 
 Produce the memory dump corresponding to the WebAssembly binary.
 

@@ -45,7 +45,7 @@
 @!file_name_size=40; {file names shouldn't be longer than this}
 @!pool_name='TeXformats:TEX.POOL                     ';
   {string of length |file_name_size|; tells where the string pool appears}
-@.TeXformats@>  
+@.TeXformats@>
 @y
 @!mem_max=8000000; {greatest index in \TeX's internal |mem| array;
   must be strictly less than |max_halfword|;
@@ -85,7 +85,7 @@
 @!file_name_size=80; {file names shouldn't be longer than this}
 @!pool_name='TeXformats:TEX.POOL                                                 ';
   {string of length |file_name_size|; tells where the string pool appears}
-@.TeXformats@>  
+@.TeXformats@>
 @z
 
 @x

@@ -1,40 +1,37 @@
 'use strict';
-var Binaryen = require('binaryen');
 
 module.exports = class Conditional {
-  constructor(expression, result, otherwise) {
-    this.expression = expression;
-    this.result = result;
-    this.otherwise = otherwise;    
-  }
-
-  gotos() {
-    var g = this.result.gotos();
-    
-    if (this.otherwise) {
-      g = g.concat( this.otherwise.gotos() );
+    constructor(expression, result, otherwise) {
+        this.expression = expression;
+        this.result = result;
+        this.otherwise = otherwise;
     }
-    
-    return g;
-  }
 
-  
-  toString() {
-    this.generate(undefined);
-  }
-  
-  generate(environment) {
-    var module = environment.module;
+    gotos() {
+        let g = this.result.gotos();
 
-    if (this.otherwise) {
-      var theThen = this.result.generate(environment);
-      var theElse = this.otherwise.generate(environment);
+        if (this.otherwise) {
+            g = g.concat(this.otherwise.gotos());
+        }
 
-      return module.if( this.expression.generate(environment),
-                        theThen, theElse );
-    } else {
-      return module.if( this.expression.generate(environment),
-                        this.result.generate(environment) );
+        return g;
     }
-  }
+
+    toString() {
+        this.generate(undefined);
+    }
+
+    generate(environment) {
+        const module = environment.module;
+
+        if (this.otherwise) {
+            return module.if(
+                this.expression.generate(environment),
+                this.result.generate(environment),
+                this.otherwise.generate(environment)
+            );
+        } else {
+            return module.if(this.expression.generate(environment), this.result.generate(environment));
+        }
+    }
 };

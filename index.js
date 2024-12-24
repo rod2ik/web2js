@@ -1,14 +1,25 @@
-var Lexer = require('flex-js');
+#!/usr/bin/env node
 
-var lexer = new Lexer();
+const Binaryen = require('binaryen');
+const Lexer = require('flex-js');
+const fs = require('fs');
+const kpathsea = require('node-kpathsea');
+const parser = require('./parser').parser;
+const { pages } = require('./commonMemory');
 
-var last_token;
+Binaryen.setOptimizeLevel(0);
+Binaryen.setPassArgument('asyncify-ignore-indirect', 'true');
+Binaryen.setPassArgument('asyncify-imports', 'library.reset');
+
+const lexer = new Lexer();
+
+let last_token;
 
 // definitions
 lexer.addDefinition('DIGIT', /[0-9]/);
 lexer.addDefinition('ALPHA', /[a-zA-Z]/);
 lexer.addDefinition('ALPHANUM', /([0-9]|[a-zA-z]|_)/);
-lexer.addDefinition('IDENTIFIER', /[a-zA-Z]([0-9]|[a-zA-Z]|_)*/ );
+lexer.addDefinition('IDENTIFIER', /[a-zA-Z]([0-9]|[a-zA-Z]|_)*/);
 lexer.addDefinition('NUMBER', /[0-9]+/);
 lexer.addDefinition('SIGN', /(\+|-)/);
 lexer.addDefinition('SIGNED', /(\+|-)?[0-9]+/);
@@ -16,386 +27,459 @@ lexer.addDefinition('REAL', /([0-9]+\.[0-9]+|[0-9]+\.[0-9]+e(\+|-)?[0-9]+|[0-9]+
 lexer.addDefinition('COMMENT', /(({[^}]*})|(\(\*([^*]|\*[^)])*\*\)))/);
 lexer.addDefinition('W', /([ \n\t]+)+/);
 
-lexer.addRule('{', function (lexer) {
-  while (lexer.input() != '}')
-    ;
+lexer.addRule('{', (lexer) => {
+    while (lexer.input() != '}');
 });
 
 lexer.addRule(/{W}/);
 
-//lexer.addRule(/procedure [a-z_]+;[ \n\t]*forward;/);
-//lexer.addRule(/function [(),:a-z_]+;[ \n\t]*forward;/);
+lexer.addRule('packed', () => 'packed');
+lexer.addRule('forward', () => 'forward');
+lexer.addRule('and', () => 'and');
+lexer.addRule('array', () => 'array');
+lexer.addRule('begin', () => 'begin');
+lexer.addRule('case', () => 'case');
+lexer.addRule('const', () => 'const');
+lexer.addRule('div', () => 'div');
+lexer.addRule('do', () => 'do');
+lexer.addRule('downto', () => 'downto');
+lexer.addRule('else', () => 'else');
+lexer.addRule('end', () => 'end');
+lexer.addRule('file', () => 'file');
+lexer.addRule('for', () => 'for');
+lexer.addRule('function', () => 'function');
+lexer.addRule('goto', () => 'goto');
+lexer.addRule('if', () => 'if');
+lexer.addRule('label', () => 'label');
+lexer.addRule('mod', () => 'mod');
+lexer.addRule('not', () => 'not');
+lexer.addRule('of', () => 'of');
+lexer.addRule('or', () => 'or');
+lexer.addRule('procedure', () => 'procedure');
+lexer.addRule('program', () => 'program');
+lexer.addRule('record', () => 'record');
+lexer.addRule('repeat', () => 'repeat');
+lexer.addRule('then', () => 'then');
+lexer.addRule('to', () => 'to');
+lexer.addRule('type', () => 'type');
+lexer.addRule('until', () => 'until');
+lexer.addRule('var', () => 'var');
+lexer.addRule('while', () => 'while');
+lexer.addRule('others', () => 'others');
+lexer.addRule('true', () => 'true');
+lexer.addRule('false', () => 'false');
 
-lexer.addRule("packed"		, function(lexer) { return 'packed'; } );
-lexer.addRule("forward"		, function(lexer) { return 'forward'; } );
-lexer.addRule("and"		, function(lexer) { return 'and'; } );
-lexer.addRule("array"		, function(lexer) { return 'array'; } );
-lexer.addRule("begin"		, function(lexer) { return 'begin'; } );
-lexer.addRule("case"		, function(lexer) { return 'case'; } );
-lexer.addRule("const"		, function(lexer) { return 'const'; } );
-lexer.addRule("div"		, function(lexer) { return 'div'; } );
-lexer.addRule("do"		, function(lexer) { return 'do'; } );
-lexer.addRule("downto"	, function(lexer) { return 'downto'; } );
-lexer.addRule("else"		, function(lexer) { return 'else'; } );
-lexer.addRule("end"		, function(lexer) { return 'end'; } );
-lexer.addRule("file"		, function(lexer) { return 'file'; } );
-lexer.addRule("for"		, function(lexer) { return 'for'; } );
-lexer.addRule("function"	, function(lexer) { return 'function'; } );
-lexer.addRule("goto"		, function(lexer) { return 'goto'; } );
-lexer.addRule("if"		, function(lexer) { return 'if'; } );
-lexer.addRule("label"		, function(lexer) { return 'label'; } );
-lexer.addRule("mod"		, function(lexer) { return 'mod'; } );
-lexer.addRule("not"		, function(lexer) { return 'not'; } );
-lexer.addRule("of"		, function(lexer) { return 'of'; } );
-lexer.addRule("or"		, function(lexer) { return 'or'; } );
-lexer.addRule("procedure"	, function(lexer) { return 'procedure'; } );
-lexer.addRule("program"	, function(lexer) { return 'program'; } );
-lexer.addRule("record"	, function(lexer) { return 'record'; } );
-lexer.addRule("repeat"	, function(lexer) { return 'repeat'; } );
-lexer.addRule("then"		, function(lexer) { return 'then'; } );
-lexer.addRule("to"		, function(lexer) { return 'to'; } );
-lexer.addRule("type"		, function(lexer) { return 'type'; } );
-lexer.addRule("until"		, function(lexer) { return 'until'; } );
-lexer.addRule("var"		, function(lexer) { return 'var'; } );
-lexer.addRule("while"		, function(lexer) { return 'while'; } );
-lexer.addRule("others"	, function(lexer) { return 'others'; } );
-lexer.addRule("true"		, function(lexer) { return 'true'; } );
-lexer.addRule("false"		, function(lexer) { return 'false'; } );
+lexer.addRule(/'([^']|'')'/, () => 'single_char');
 
-lexer.addRule(/'([^']|'')'/		, function(lexer) {
-  return 'single_char';
+lexer.addRule(/'([^']|'')+'/, (lexer) => {
+    if (lexer.text == "''''" || lexer.text.length == 3) {
+        lexer.reject();
+    } else return 'string_literal';
 });
 
-lexer.addRule(/'([^']|'')+'/		, function(lexer) {
-  if ((lexer.text == "''''") || (lexer.text.length == 3)) {
-    lexer.reject();
-  } else
-    return 'string_literal';
+lexer.addRule('+', () => {
+    if (
+        last_token == 'identifier' ||
+        last_token == 'i_num' ||
+        last_token == 'r_num' ||
+        last_token == ')' ||
+        last_token == ']'
+    )
+        return '+';
+    else return 'unary_plus';
 });
 
-lexer.addRule('+'		, function(lexer) {
-  if ((last_token == 'identifier') ||
-      (last_token == 'i_num') ||
-      (last_token == 'r_num') ||
-      (last_token == ')') ||
-      (last_token == ']'))
-    return '+';
-  else
-    return 'unary_plus';
-});
-
-lexer.addRule('-'		, function(lexer) {
- if ((last_token == 'identifier') ||
-      (last_token == 'i_num') ||
-      (last_token == 'r_num') ||
-      (last_token == ')') ||
-      (last_token == ']'))
-   return '-';
-  else {
-    var c;
-    while ( ((c=lexer.input()) == ' ') || (c == "\t") ) {
+lexer.addRule('-', (lexer) => {
+    if (
+        last_token == 'identifier' ||
+        last_token == 'i_num' ||
+        last_token == 'r_num' ||
+        last_token == ')' ||
+        last_token == ']'
+    )
+        return '-';
+    else {
+        let c;
+        while ((c = lexer.input()) == ' ' || c == '\t') {
+            /* do nothing */
+        }
+        lexer.unput(c);
+        if (parseInt(c).toString() != c) {
+            return 'unary_minus';
+        }
+        lexer.reject();
     }
-    lexer.unput(c);
-    if (parseInt(c).toString() != c) {
-      return 'unary_minus';
-    }
-    lexer.reject();
-  }
 });
 
-lexer.addRule(/-?{REAL}/		, function(lexer) { return 'r_num'; } );
+lexer.addRule(/-?{REAL}/, () => 'r_num');
 
-lexer.addRule(/-?{NUMBER}/		, function(lexer) {
- if ((last_token == 'identifier') ||
-     (last_token == 'i_num') ||
-      (last_token == 'r_num') ||
-      (last_token == ')') ||
-      (last_token == ']'))
-   lexer.reject();
+lexer.addRule(/-?{NUMBER}/, (lexer) => {
+    if (
+        last_token == 'identifier' ||
+        last_token == 'i_num' ||
+        last_token == 'r_num' ||
+        last_token == ')' ||
+        last_token == ']'
+    )
+        lexer.reject();
 
-  return 'i_num';
-} );
+    return 'i_num';
+});
 
-lexer.addRule("*"		, function(lexer) { return '*'; } );
-lexer.addRule("/"		, function(lexer) { return '/'; } );
-lexer.addRule("="		, function(lexer) { return '='; } );
-lexer.addRule("<>"		, function(lexer) { return '<>'; } );
-lexer.addRule("<"		, function(lexer) { return '<'; } );
-lexer.addRule(">"		, function(lexer) { return '>'; } );
-lexer.addRule("<="		, function(lexer) { return '<='; } );
-lexer.addRule(">="		, function(lexer) { return '>='; } );
-lexer.addRule("("		, function(lexer) { return '('; } );
-lexer.addRule(")"		, function(lexer) { return ')'; } );
-lexer.addRule("["		, function(lexer) { return '['; } );
-lexer.addRule("]"		, function(lexer) { return ']'; } );
-lexer.addRule(":="		, function(lexer) { return 'assign'; } );
-lexer.addRule(".."		, function(lexer) { return '..';} );
-lexer.addRule("."		, function(lexer) { return '.'; } );
-lexer.addRule(","		, function(lexer) { return ','; } );
-lexer.addRule(";"		, function(lexer) { return ';'; } );
-lexer.addRule(":"		, function(lexer) { return ':'; } );
-lexer.addRule("^"		, function(lexer) { return '^'; } );
+lexer.addRule('*', () => '*');
+lexer.addRule('/', () => '/');
+lexer.addRule('=', () => '=');
+lexer.addRule('<>', () => '<>');
+lexer.addRule('<', () => '<');
+lexer.addRule('>', () => '>');
+lexer.addRule('<=', () => '<=');
+lexer.addRule('>=', () => '>=');
+lexer.addRule('(', () => '(');
+lexer.addRule(')', () => ')');
+lexer.addRule('[', () => '[');
+lexer.addRule(']', () => ']');
+lexer.addRule(':=', () => 'assign');
+lexer.addRule('..', () => '..');
+lexer.addRule('.', () => '.');
+lexer.addRule(',', () => ',');
+lexer.addRule(';', () => ';');
+lexer.addRule(':', () => ':');
+lexer.addRule('^', () => '^');
 
-lexer.addRule(/{IDENTIFIER}/		, function(lexer) {
-  return 'identifier';
-} );
+lexer.addRule(/{IDENTIFIER}/, () => 'identifier');
 
+lexer.addRule(/./, () => '..');
 
-lexer.addRule(/./		, function(lexer) { return '..'; } );
-
-var fs = require('fs');
-var code = fs.readFileSync(process.argv[2]).toString();
-lexer.setSource(code);
-
-var parser = require('./parser').parser;
+lexer.setSource(fs.readFileSync(process.argv[2]).toString());
 
 parser.lexer = {
-  lex: function () {
-    var token = lexer.lex();
-    last_token = token;
-    this.yytext = lexer.text;
-    //console.log(lexer.text);
-    return token;
+    lex() {
+        const token = lexer.lex();
+        last_token = token;
+        this.yytext = lexer.text;
+        //console.log(lexer.text);
+        return token;
     },
-  setInput: function (str) {
-  }
+    setInput(_str) {}
 };
 
-var program = parser.parse();
+const program = parser.parse();
 
-var module = program.generate();
+const programModule = program.generate();
 
-//module.optimize();
-//module.runPasses(["optimize-stack-ir","simplify-locals","ssa","dfo","const-hoisting","dce"]);
-//module.runPasses(["remove-unused-brs","pick-load-signs","precompute","precompute-propagate","code-pushing","duplicate-function-elimination","inlining-optimizing","dae-optimizing","generate-stack-ir","optimize-stack-ir"]);
-
-
-//fs.writeFileSync( "tex.wast", module.emitText() );
-fs.writeFileSync( "tex.wabt", module.emitBinary() );
+programModule.runPasses([
+    'remove-unused-brs',
+    'pick-load-signs',
+    'precompute',
+    'precompute-propagate',
+    'code-pushing',
+    'duplicate-function-elimination',
+    'inlining-optimizing',
+    'dae-optimizing',
+    'generate-stack-ir',
+    'optimize-stack-ir',
+    'asyncify'
+]);
 
 // Get the binary in typed array form
-var binary = module.emitBinary();
-//console.log('binary size: ' + binary.length);
-//console.log();
+const binary = programModule.emitBinary();
 
-// We don't need the Binaryen module anymore, so we can tell it to
-// clean itself up
-module.dispose();
-
-var code = new WebAssembly.Module(binary);
-
-var pages = require('./commonMemory').pages;
-var memory = new WebAssembly.Memory({initial: pages, maximum: pages});
-
-var callstack = [];
-var stackstack = [];
-
-var files = [];
-
-var library = {
-  printString: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];
-    var length = new Uint8Array( memory.buffer, x, 1 )[0];
-    var buffer = new Uint8Array( memory.buffer, x+1, length );
-    var string = String.fromCharCode.apply(null, buffer);
-
-    if (file.stdout) {
-      process.stdout.write(string);
-      return;
-    }
-
-    fs.writeSync( file.descriptor, string );    
-  },
-  printBoolean: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];    
-
-    var result = x ? "TRUE" : "FALSE";
-
-    if (file.stdout) {
-      process.stdout.write(result);
-      return;
-    }
-
-    fs.writeSync( file.descriptor, result );    
-  },
-  printChar: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];        
-    if (file.stdout) {
-      process.stdout.write(String.fromCharCode(x));
-      return;
-    }
-
-    var b = Buffer.alloc(1);
-    b[0] = x;
-    fs.writeSync( file.descriptor, b );
-  },
-  printInteger: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];            
-    if (file.stdout) {
-      process.stdout.write(x.toString());
-      return;
-    }
-
-    fs.writeSync( file.descriptor, x.toString());
-  },
-  printFloat: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];                
-    if (file.stdout) {
-      process.stdout.write(x.toString());
-      return;
-    }
-
-    fs.writeSync( file.descriptor, x.toString());    
-  },
-  printNewline: function(descriptor, x) {
-    var file = (descriptor < 0) ? {stdout:true} : files[descriptor];                    
-    if (file.stdout) {
-      process.stdout.write("\n");
-      return;
-    }
-
-    fs.writeSync( file.descriptor, "\n");    
-  },
-};
-
-var inputBuffer = "\nplain\n\\input sample\n";
-//var inputBuffer = "\n&plain\n\\input sample\n";
-//var inputBuffer = "\nplain\n\\dump";
-//var inputBuffer = "\nplain";
-//var inputBuffer = "\n&plain";
-
-var filesystemLibrary = {
-  reset: function(length, pointer) {
-    var buffer = new Uint8Array( memory.buffer, pointer, length );
-    var filename = String.fromCharCode.apply(null, buffer);
-
-    //console.log( filename );
-    
-    filename = filename.replace(/ +$/g,'');
-    filename = filename.replace(/^TeXfonts:/,'fonts/');    
-
-    if (filename == 'TeXformats:TEX.POOL')
-      filename = "tex.pool";
-
-    if (filename == "TTY:") {
-      files.push({ filename: "stdin",
-                   stdin: true,
-                   position: 0,
-                 });
-      return files.length - 1;
-    }
-
-    files.push({
-      filename: filename,
-      position: 0,
-      descriptor: fs.openSync(filename,'r'),
-    });
-    
-    return files.length - 1;
-  },
-
-  rewrite: function(length, pointer) {
-    var buffer = new Uint8Array( memory.buffer, pointer, length );
-    var filename = String.fromCharCode.apply(null, buffer);    
-    
-    filename = filename.replace(/ +$/g,'');    
-    
-    if (filename == "TTY:") {
-      files.push({ filename: "stdout",
-                   stdout: true
-                 });
-      return files.length - 1;
-    }
-
-    files.push({
-      filename: filename,
-      position: 0,
-      descriptor: fs.openSync(filename,'w')
-    });
-    
-    return files.length - 1;
-  },
-
-  close: function(descriptor) {
-    var file = files[descriptor];
-
-    if (file.descriptor)
-      fs.closeSync( file.descriptor );
-
-    files[descriptor] = {};
-  },
-
-  eof: function(descriptor) {
-    var file = files[descriptor];
-    
-    if (file.eof)
-      return 1;
-    else
-      return 0;
-  },
-
-  eoln: function(descriptor) {
-    var file = files[descriptor];
-
-    if (file.eoln)
-      return 1;
-    else
-      return 0;
-  },
-    
-  get: function(descriptor, pointer, length) {
-    var file = files[descriptor];
-    
-    var buffer = new Uint8Array( memory.buffer );
-    
-    if (file.stdin) {
-      if (file.position >= inputBuffer.length)
-	buffer[pointer] = 13;
-      else
-	buffer[pointer] = inputBuffer[file.position].charCodeAt(0);
-    } else {
-      if (fs.readSync( file.descriptor, buffer, pointer, length, file.position ) == 0) {
-        buffer[pointer] = 0;
-        file.eof = true;
-        file.eoln = true;
-        return;
-      }
-    }
-
-    file.eoln = false;
-    if (buffer[pointer] == 10)
-      file.eoln = true;
-    if (buffer[pointer] == 13)
-      file.eoln = true;
-
-    file.position = file.position + length;
-  },
-
-  put: function(descriptor, pointer, length) {
-    var file = files[descriptor];
-    
-    var buffer = new Uint8Array( memory.buffer );
-
-    fs.writeSync( file.descriptor, buffer, pointer, length );
-  },
-
-};
-
-// Compile the binary and create an instance
-try {
-var wasm = new WebAssembly.Instance(code, { library: library,
-                                            fs: filesystemLibrary,
-                                            env: { memory: memory } } );
-} catch (e) {
-  console.log(e);
-  console.log(callstack);
+if (!programModule.validate()) {
+    console.log('Program validation failed');
+    process.exit();
 }
-//console.log("exports: " + Object.keys(wasm.exports).sort().join(","));
-//console.log();
 
-// Call the code!
-//console.log( wasm.exports );
-//console.log('an addition: ' + wasm.exports.adder(40, 2));
+fs.writeFileSync('tex.wabt', binary);
 
-//var header = fs.readFileSync("header.js").toString();
-//fs.writeFileSync( "tex.js", header + program.generate() );
+// The Binaryen module is no longer needed, so tell it to clean itself up.
+programModule.dispose();
+
+const code = new WebAssembly.Module(binary);
+
+const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
+
+const files = [];
+const inputBuffer = '\nplain\n\\input sample\n';
+
+const library = {
+    getCurrentMinutes() {
+        const d = new Date();
+        return 60 * d.getHours() + d.getMinutes();
+    },
+
+    getCurrentDay() {
+        return new Date().getDate();
+    },
+
+    getCurrentMonth() {
+        return new Date().getMonth() + 1;
+    },
+
+    getCurrentYear() {
+        return new Date().getFullYear();
+    },
+
+    printString(descriptor, x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+        const length = new Uint8Array(memory.buffer, x, 1)[0];
+        const buffer = new Uint8Array(memory.buffer, x + 1, length);
+        const string = String.fromCharCode.apply(null, buffer);
+
+        if (file.stdout) {
+            process.stdout.write(string);
+            return;
+        }
+
+        fs.writeSync(file.descriptor, string);
+    },
+
+    printBoolean(descriptor, x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+
+        const result = x ? 'TRUE' : 'FALSE';
+
+        if (file.stdout) {
+            process.stdout.write(result);
+            return;
+        }
+
+        fs.writeSync(file.descriptor, result);
+    },
+
+    printChar(descriptor, x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+        if (file.stdout) {
+            process.stdout.write(String.fromCharCode(x));
+            return;
+        }
+
+        const b = Buffer.alloc(1);
+        b[0] = x;
+        fs.writeSync(file.descriptor, b);
+    },
+
+    printInteger(descriptor, x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+        if (file.stdout) {
+            process.stdout.write(x.toString());
+            return;
+        }
+
+        fs.writeSync(file.descriptor, x.toString());
+    },
+
+    printFloat(descriptor, x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+        if (file.stdout) {
+            process.stdout.write(x.toString());
+            return;
+        }
+
+        fs.writeSync(file.descriptor, x.toString());
+    },
+
+    printNewline(descriptor, _x) {
+        const file = descriptor < 0 ? { stdout: true } : files[descriptor];
+        if (file.stdout) {
+            process.stdout.write('\n');
+            return;
+        }
+
+        fs.writeSync(file.descriptor, '\n');
+    },
+
+    reset(length, pointer) {
+        const buffer = new Uint8Array(memory.buffer, pointer, length);
+        let filename = String.fromCharCode.apply(null, buffer);
+
+        filename = filename.replace(/ +$/g, '');
+        filename = filename.replace(/^TeXfonts:/, 'fonts/');
+
+        if (filename == 'TeXformats:TEX.POOL') filename = 'tex.pool';
+
+        if (filename == 'TTY:') {
+            files.push({ filename: 'stdin', stdin: true, position: 0 });
+            return files.length - 1;
+        }
+
+        files.push({
+            filename: filename,
+            position: 0,
+            descriptor: fs.openSync(filename, 'r')
+        });
+
+        return files.length - 1;
+    },
+
+    rewrite(length, pointer) {
+        const buffer = new Uint8Array(memory.buffer, pointer, length);
+        let filename = String.fromCharCode.apply(null, buffer);
+
+        filename = filename.replace(/ +$/g, '');
+
+        if (filename == 'TTY:') {
+            files.push({ filename: 'stdout', stdout: true });
+            return files.length - 1;
+        }
+
+        files.push({
+            filename: filename,
+            position: 0,
+            descriptor: fs.openSync(filename, 'w')
+        });
+
+        return files.length - 1;
+    },
+
+    getfilesize(length, pointer) {
+        const buffer = new Uint8Array(memory, pointer, length);
+        let filename = String.fromCharCode.apply(null, buffer);
+
+        if (filename.startsWith('{')) {
+            filename = filename.replace(/^{/g, '');
+            filename = filename.replace(/}.*/g, '');
+        }
+
+        filename = filename.replace(/ +$/g, '');
+        filename = filename.replace(/^\*/, '');
+
+        let format = kpathsea.FILE_FORMAT.TEX;
+        if (filename.startsWith('TeXfonts:')) {
+            filename = filename.replace(/^TeXfonts:/, '');
+            format = kpathsea.FILE_FORMAT.TFM;
+        }
+
+        if (filename == 'TeXformats:TEX.POOL') {
+            filename = 'tex.pool';
+            format = kpathsea.FILE_FORMAT.TEXPOOL;
+        }
+
+        filename = new kpathsea.Kpathsea('latex').findFile(filename, format);
+
+        if (filename) {
+            try {
+                const stats = fs.statSync(filename);
+
+                return stats.size;
+            } catch {
+                return 0;
+            }
+        }
+
+        return 0;
+    },
+
+    close(descriptor) {
+        const file = files[descriptor];
+
+        if (file.descriptor) fs.closeSync(file.descriptor);
+
+        files[descriptor] = {};
+    },
+
+    eof(descriptor) {
+        const file = files[descriptor];
+
+        if (file.eof) return 1;
+        else return 0;
+    },
+
+    erstat(descriptor) {
+        const file = files[descriptor];
+        return file.erstat;
+    },
+
+    eoln(descriptor) {
+        const file = files[descriptor];
+
+        if (file.eoln) return 1;
+        else return 0;
+    },
+
+    inputln(descriptor, bypass_eoln, bufferp, firstp, lastp, _max_buf_stackp, buf_size) {
+        const file = files[descriptor];
+        //const last_nonblank = 0; // |last| with trailing blanks removed
+
+        const buffer = new Uint8Array(memory, bufferp, buf_size);
+        const first = new Uint32Array(memory, firstp, 1);
+        const last = new Uint32Array(memory, lastp, 1);
+        //const max_buf_stack = new Uint32Array(memory, max_buf_stackp, 1);
+
+        // cf.\ Matthew 19\thinspace:\thinspace30
+        last[0] = first[0];
+
+        // input the first character of the line into |f^|
+        if (bypass_eoln) {
+            if (!file.eof) {
+                if (file.eoln) {
+                    file.position2 = file.position2 + 1;
+                }
+            }
+        }
+
+        if (file.eof) return false;
+
+        let endOfLine = file.content.indexOf(10, file.position2);
+        if (endOfLine < 0) endOfLine = file.content.length;
+
+        if (file.position2 >= file.content.length) {
+            if (file.stdin) library.tex_final_end();
+            file.eof = true;
+            return false;
+        } else {
+            const bytesCopied = file.content.copy(buffer, first[0], file.position2, endOfLine);
+
+            last[0] = first[0] + bytesCopied;
+
+            while (buffer[last[0] - 1] == 32) last[0] = last[0] - 1;
+
+            file.position2 = endOfLine;
+            file.eoln = true;
+        }
+
+        return true;
+    },
+
+    get(descriptor, pointer, length) {
+        const file = files[descriptor];
+
+        const buffer = new Uint8Array(memory.buffer);
+
+        if (file.stdin) {
+            if (file.position >= inputBuffer.length) buffer[pointer] = 13;
+            else buffer[pointer] = inputBuffer[file.position].charCodeAt(0);
+        } else {
+            if (fs.readSync(file.descriptor, buffer, pointer, length, file.position) == 0) {
+                buffer[pointer] = 0;
+                file.eof = true;
+                file.eoln = true;
+                return;
+            }
+        }
+
+        if (buffer[pointer] == 10 || buffer[pointer] == 13) file.eoln = true;
+        else file.eoln = false;
+
+        file.position = file.position + length;
+    },
+
+    put(descriptor, pointer, length) {
+        const file = files[descriptor];
+
+        const buffer = new Uint8Array(memory.buffer);
+
+        fs.writeSync(file.descriptor, buffer, pointer, length);
+    },
+
+    tex_final_end() {
+        module.exports.printNewline(-1);
+    }
+};
+
+// Compile execute the web assembly module.
+try {
+    const wasm = new WebAssembly.Instance(code, { library, env: { memory } });
+    wasm.exports.main();
+} catch (e) {
+    console.log(e);
+}

@@ -1,17 +1,14 @@
 'use strict';
-var Identifier = require('./identifier.js');
+
+const Identifier = require('./identifier.js');
 
 module.exports = class StringLiteral {
-  constructor(text) {
-    this.text = text.replace(/^'/,'').replace(/'$/,'').replace(/''/,"'");
-    this.type = new Identifier('string');    
-  }
+    constructor(text) {
+        this.text = text.replace(/^'/, '').replace(/'$/, '').replace(/''/, "'");
+        this.type = new Identifier('string');
+    }
 
-  generate(environment) {
-    var t = this.text;
-    var module = environment.module;
-    var pointer = environment.program.memory.allocateString( t );
-
-    return module.i32.const( pointer );
-  }
+    generate(environment) {
+        return environment.module.i32.const(environment.program.memory.allocateString(this.text));
+    }
 };

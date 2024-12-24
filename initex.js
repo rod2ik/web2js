@@ -2,17 +2,17 @@
 
 const fs = require('fs');
 const library = require('./library');
+const { pages } = require('./commonMemory');
 
 const binary = fs.readFileSync('tex.wasm');
 
 const code = new WebAssembly.Module(binary);
 
-const pages = require('./commonMemory').pages;
 const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
 library.setMemory(memory.buffer);
-library.setInput('\n*latex.ltx\n\\dump\n\n', function () {});
+library.setInput('\n*latex.ltx\n\\dump\n\n', () => {});
 
-let wasm = new WebAssembly.Instance(code, { library: library, env: { memory } });
+let wasm = new WebAssembly.Instance(code, { library, env: { memory } });
 library.setWasmExports(wasm.exports);
 
 wasm.exports.main();
@@ -24,7 +24,7 @@ library.setInput(
         '\\def\\pgfsysdriver{pgfsys-ximera.def}\n' +
         '\\usepackage[svgnames]{xcolor}\n' +
         '\\usepackage{tikz}\n\n',
-    function () {
+    () => {
         library.tex_final_end();
         const buffer = new Uint8Array(memory.buffer);
         fs.writeFileSync('core.dump', buffer);
@@ -37,7 +37,7 @@ library.setInput(
     }
 );
 
-wasm = new WebAssembly.Instance(code, { library: library, env: { memory: memory } });
+wasm = new WebAssembly.Instance(code, { library, env: { memory } });
 library.setWasmExports(wasm.exports);
 
 wasm.exports.main();

@@ -1,34 +1,32 @@
 'use strict';
 
-var count = 1;
+let count = 1;
 
 module.exports = class Repeat {
-  constructor(expression, statement) {
-    this.expression = expression;
-    this.statement = statement;
-  }
+    constructor(expression, statement) {
+        this.expression = expression;
+        this.statement = statement;
+    }
 
-  gotos() {
-    return this.statement.gotos();
-  }
+    gotos() {
+        return this.statement.gotos();
+    }
 
-  generate(environment) {
-    var module = environment.module;
+    generate(environment) {
+        const module = environment.module;
 
-    var loopLabel = `repeat${count}`;
-    var blockLabel = `repeat${count}-done`;
-    count = count + 1;
+        const loopLabel = `repeat${count}`;
+        const blockLabel = `repeat${count}-done`;
+        ++count;
 
-    var loop = module.block( blockLabel,
-                             [ module.loop( loopLabel,
-                                            module.block( null, [ this.statement.generate(environment),
-                                                                  module.if( this.expression.generate(environment),
-                                                                             module.break( blockLabel ),
-                                                                             module.break( loopLabel )
-                                                                           ) ] )
-                                          )
-                             ] );
-
-    return loop;
-  }
+        return module.block(blockLabel, [
+            module.loop(
+                loopLabel,
+                module.block(null, [
+                    this.statement.generate(environment),
+                    module.if(this.expression.generate(environment), module.break(blockLabel), module.break(loopLabel))
+                ])
+            )
+        ]);
+    }
 };

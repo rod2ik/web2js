@@ -2,30 +2,40 @@
     "name": "web2js",
     "version": "1.0.0",
     "description": "Convert \"Pascal\" output of WEB into JavaScript",
+    "author": "Jim Fowler",
+    "contributors": [
+        "Glenn Rice"
+    ],
+    "license": "GPL-3.0",
     "main": "index.js",
     "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint . --fix",
+        "lint:check": "eslint .",
         "test": "node spec/run-tests.js",
-        "build": "jison parser.jison",
-        "tie": "tie -m tex.web texk/tex.web $(cat changes/change-order)",
-		"tangle": "tangle -underline tex.web",
-		"compile": "node compile.js tex.p out.wasm",
-		"generate-wasm": "npm run tie && npm run tangle && npm run compile",
-        "asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
-		"initex": "node initex.js",
-        "generate-core": "npm run build && npm run generate-wasm && npm run asyncify-wasm && npm run initex"
+        "build:parser": "jison parser.jison",
+        "build:tie": "tie -m tex.web texk/tex.web $(cat changes/change-order)",
+        "build:tangle": "tangle -underline tex.web",
+        "build:compile": "node compile.js tex.p out.wasm",
+        "build:wasm": "npm run build:tie && npm run build:tangle && npm run build:compile",
+        "build:asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
+        "build:initex": "node initex.js",
+        "build": "npm run build:parser && npm run build:wasm && npm run build:asyncify-wasm && npm run build:initex"
     },
-    "author": "Jim Fowler",
-    "license": "GPL-3.0",
     "dependencies": {
         "binaryen": "^99.0.0",
         "flex-js": "^1.0.4",
         "jison": "^0.4.18",
-        "node-kpathsea": "github:kisonecat/node-kpathsea",
-        "pegjs": "^0.10.0"
+        "node-kpathsea": "github:kisonecat/node-kpathsea"
     },
     "devDependencies": {
+        "@stylistic/eslint-plugin": "^2.12.1",
         "colors": "^1.4.0",
+        "eslint": "^9.17.0",
+        "eslint-config-prettier": "^9.1.0",
         "glob": "^11.0.0",
-        "log-symbols": "^2.2.0"
+        "log-symbols": "^2.2.0",
+        "prettier": "^3.4.2"
     }
 }
