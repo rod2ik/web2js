@@ -12,7 +12,7 @@ const f = fs.openSync(`${__dirname}/core.dump`, 'r');
 if (fs.readSync(f, buffer, 0, pages * 65536) != pages * 65536) throw 'Could not load memory dump';
 
 library.setMemory(memory.buffer);
-library.setInput(` ${process.argv[2]} \n\\end\n`);
+library.setInput(`${process.argv[2]}\n\\end\n`);
 
 WebAssembly.instantiate(code, { library, env: { memory } }).then((wasm) => {
     wasm.instance.exports.main();

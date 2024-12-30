@@ -275,9 +275,7 @@ module.exports = {
 
         if (filename) {
             try {
-                const stats = fs.statSync(filename);
-
-                return stats.size;
+                return fs.statSync(filename).size;
             } catch {
                 return 0;
             }

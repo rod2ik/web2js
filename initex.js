@@ -8,15 +8,16 @@ const binary = fs.readFileSync('tex.wasm');
 
 const code = new WebAssembly.Module(binary);
 
-const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
-library.setMemory(memory.buffer);
+const initexMemory = new WebAssembly.Memory({ initial: pages, maximum: pages });
+library.setMemory(initexMemory.buffer);
 library.setInput('\n*latex.ltx\n\\dump\n\n', () => {});
 
-let wasm = new WebAssembly.Instance(code, { library, env: { memory } });
+let wasm = new WebAssembly.Instance(code, { library, env: { memory: initexMemory } });
 library.setWasmExports(wasm.exports);
 
 wasm.exports.main();
 
+const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
 library.setMemory(memory.buffer);
 library.setInput(
     '\n&latex\n' +

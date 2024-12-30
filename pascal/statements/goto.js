@@ -31,6 +31,8 @@ module.exports = class Goto {
             ]);
         }
 
+        if (this.label == 10) return module.return();
+
         let e = environment;
         while (e !== undefined && e.name === undefined) {
             e = e.parent;

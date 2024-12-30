@@ -1,33 +1,21 @@
 @x
-  othercases print_esc("jobname")
+@!@:badness_}{\.{\\badness} primitive@>
+@y
+@!@:badness_}{\.{\\badness} primitive@>
+primitive("shellescape",last_item,shellescape_code);@/
+@!@:shellescape_}{\.{\\shellescape} primitive@>
+@z
+
+@x
+  othercases print_esc("badness")
 @y
   shellescape_code: print_esc("shellescape");
-  othercases print_esc("jobname")
+  othercases print_esc("badness")
 @z
 
-@x Read-only status indicating ‘shell escape’ allowed. Expands to zero for off.
-job_name_code: if job_name=0 then open_log_file;
+@x Read-only status indicating if shell escape is allowed. Expands to zero for off.
+  badness_code: cur_val:=last_badness;
 @y
-shellescape_code: cur_val:=0;
-job_name_code: if job_name=0 then open_log_file;
+  badness_code: cur_val:=last_badness;
+  shellescape_code: cur_val := 0;
 @z
-
-@x
-job_name_code: print(job_name);
-@y
-shellescape_code: print_int(cur_val);
-job_name_code: print(job_name);
-@z
-
-@x
-@* \[54] System-dependent changes.
-@y
-@* \[53x] shellescape
-
-@<Generate all \eTeX...@>=
-primitive("shellescape",convert,shellescape_code);@/
-@!@:shellescape_}{\.{\\shellescape} primitive@>
-
-@* \[54] System-dependent changes.
-@z
-

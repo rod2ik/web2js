@@ -25,10 +25,12 @@ expanded_code:
     warning_index := save_warning_index;
     scanner_status := save_scanner_status;
     ins_list(link(def_ref));
+    free_avail(def_ref);
     def_ref := save_def_ref;
     restore_cur_string;
+    return;
   end;
-job_name_code: if job_name=0 then open_log_file;  
+job_name_code: if job_name=0 then open_log_file;
 @z
 
 @x
@@ -43,7 +45,7 @@ primitive("expanded",convert,expanded_code);@/
 @ @<Declare \eTeX\ procedures for use by |main_control|@>=
 procedure scan_pdf_ext_toks;
 begin
-  call_func(scan_toks(false, true)); 
+  call_func(scan_toks(false, true));
 end;
 
 @* \[54] System-dependent changes.

@@ -5,11 +5,11 @@ changes/ord-chr.ch
 changes/tokens.ch
 changes/inputln.ch
 changes/codes.ch
-changes/filesize.ch
-changes/strcmp.ch
-changes/shellescape.ch
-changes/uchar.ch
 changes/expanded.ch
+changes/strcmp.ch
+changes/creationdate.ch
+changes/filesize.ch
+changes/shellescape.ch
 changes/wordsize.ch
 changes/expand-depth-count.ch
 changes/memory.ch

@@ -19,7 +19,7 @@
         "build:tangle": "tangle -underline tex.web",
         "build:compile": "node compile.js tex.p out.wasm",
         "build:wasm": "npm run build:tie && npm run build:tangle && npm run build:compile",
-        "build:asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm",
+        "build:asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset,library.getfilesize -O4 out.wasm -o tex.wasm",
         "build:initex": "node initex.js",
         "build": "npm run build:parser && npm run build:wasm && npm run build:asyncify-wasm && npm run build:initex"
     },

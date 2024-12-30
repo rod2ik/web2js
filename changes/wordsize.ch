@@ -7,5 +7,5 @@
 @d min_quarterword=0 {smallest allowable value in a |quarterword|}
 @d max_quarterword=65535 {largest allowable value in a |quarterword|}
 @d min_halfword==0 {smallest allowable value in a |halfword|}
-@d max_halfword==16777215 {largest allowable value in a |halfword|}
+@d max_halfword==536870911 {largest allowable value in a |halfword|}
 @z
