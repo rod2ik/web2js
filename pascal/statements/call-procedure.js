@@ -204,13 +204,15 @@ module.exports = class CallProcedure {
                     return module.nop();
                 }
 
-                if (type.isInteger()) printer = 'printInteger';
-                else if (type.name == 'real') printer = 'printFloat';
-                else if (type.name == 'boolean') printer = 'printBoolean';
+                // FIXME: Find out what this type really is that is coming through
+                // as an integer and correct this or fix the type resolution.
+                if (type.isInteger() && type.bytes() == 1) printer = 'printChar';
+                else if (type.isInteger()) printer = 'printInteger';
+                else if (type.name === 'real') printer = 'printFloat';
+                else if (type.name === 'boolean') printer = 'printBoolean';
                 else if (type.name === 'string') printer = 'printString';
                 else if (type.name === 'char') printer = 'printChar';
-                else if (type.bytes() == 1) printer = 'printChar';
-                else if (printer === undefined) throw 'Could not print.';
+                if (printer === undefined) throw 'Could not print.';
 
                 if (file) return module.call(printer, [file, q], Binaryen.none);
                 else return module.call(printer, [module.i32.const(-1), q], Binaryen.none);
