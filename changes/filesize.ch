@@ -28,7 +28,7 @@ filesize_code:
     scanner_status := save_scanner_status;
     restore_cur_string;
   end;
-job_name_code: if job_name=0 then open_log_file;  
+job_name_code: if job_name=0 then open_log_file;
 @z
 
 @x
@@ -41,7 +41,7 @@ job_name_code: print(job_name);
 @x
 @* \[54] System-dependent changes.
 @y
-@* \[53x] expanded macro
+@* \[53x] filesize macro
 
 @<Generate all \eTeX...@>=
 primitive("filesize",convert,filesize_code);@/

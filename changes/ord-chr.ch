@@ -3,6 +3,6 @@ for i:=0 to @'37 do xchr[i]:=' ';
 for i:=@'177 to @'377 do xchr[i]:=' ';
 @y
 {Initialize |xchr| to the identity mapping.}
-for i:=0 to @'37 do xchr[i]:=chr(i);
-for i:=@'177 to @'377 do xchr[i]:=chr(i);
+for i:=0 to @'37 do xchr[i]:=i;
+for i:=@'177 to @'377 do xchr[i]:=i;
 @z
