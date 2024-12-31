@@ -7,23 +7,22 @@ This is a Pascal compiler that targets WebAssembly, designed specifically to com
 The following assumes you have TeX running on your machine (e.g., that `tangle` is available), and that you have the
 necessary TeX files installed on your system.
 
-A quick path to generate the tex.wasm and core.dump files is
+A quick path to generate the `tex.wasm` and `core.dump` files is
 
 ```sh
 npm install
 npm run build
 ```
 
-Note that newer versions of TeX are not compatible with this system. This is known to work with texlive 2019. Since this
-is not usually available on newer distributions of Linux a `Dockerfile` is included that provides a compatible Ubuntu
-20.04 system to work with. To build and run the docker container execute the following.
+Note that this is known to work with TeXLive 2023. A `Dockerfile` is included that provides a compatible Ubuntu 24.04
+system to work with. To build and run the docker container execute the following.
 
 ```sh
 docker build -t web2js .
 docker run -it --rm -v `pwd`:/opt/web2js web2js
 ```
 
-Inside the container run the previous commands to generate the tex.wasm and core.dump files.
+Inside the container execute `npm run build` to generate the `tex.wasm` and `core.dump` files.
 
 More details on the build process are below.
 
@@ -76,11 +75,12 @@ npm run build:wasm
 Then optimize and asyncify the wasm binary by running
 
 ```sh
-wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset -O4 out.wasm -o tex.wasm
+wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect \
+  --pass-arg=asyncify-imports@library.reset,library.getfilesize -O4 out.wasm -o tex.wasm
 ```
 
-Note that if you want to unwind/rewind other imports in the library, remove the asyncify-imports part from the above
-command or specifically add the imports to that part.
+Note that if you want to unwind/rewind other imports in the library, add the imports to the asyncify-imports part in the
+above command.
 
 Produce the memory dump corresponding to the WebAssembly binary.
 
@@ -91,31 +91,33 @@ node initex.js
 To test the assembly and core dump run
 
 ```sh
-node tex.js sample.tex
+node tex.js tex_packages/pgfplots.tex
 ```
 
-If you remove `\\def\\pgfsysdriver{pgfsys-ximera.def}`, re-run `node initex.js`, compile `sample.tex` by running
+Remove `\\def\\pgfsysdriver{pgfsys-ximera.def}` from `initex.js`, re-run `node initex.js`, and compile
+`tex_packages/pgfplots.tex` by running
 
 ```sh
-node tex.js sample.tex
+node tex.js tex_packages/pgfplots.tex
 ```
 
-This outputs sample.dvi. Convert to pdf to view using dvipdf (or dvips and ps2pdf).
+This will output `tex_packages/pgfplots.dvi`. Convert to pdf to view using `dvipdf` (or `dvips` and `ps2pdf`).
 
 Alternately change
 
 ```js
-library.setInput("\n&latex \\documentclass...}\n\n",
+library.setInput("\n&latex\n\\documentclass...\n\n",
 ```
 
-in initex.js to
+in `initex.js` to
 
 ```js
 library.setInput("\n&latex\n\n",
 ```
 
-to generate a general latex compiler. To use it uncomment the first three lines of sample.tex, and run
+to generate a general latex compiler. To use it uncomment the first two lines of `tex_packages/pgfplots.tex.tex`, and
+run
 
 ```sh
-node tex.js sample.tex
+node tex.js tex_packages/pgfplots.tex
 ```
