@@ -6,6 +6,14 @@ procedure@?ins_the_toks; forward;@t\2@>
 @z
 
 @x
+primitive("jobname",convert,job_name_code);@/
+@y
+primitive("expanded",convert,expanded_code);@/
+@!@:expanded_}{\.{\\expanded} primitive@>
+primitive("jobname",convert,job_name_code);@/
+@z
+
+@x
   othercases print_esc("jobname")
 @y
   expanded_code: print_esc("expanded");
@@ -38,10 +46,6 @@ job_name_code: if job_name=0 then open_log_file;
 @y
 @* \[53x] expanded macro
 
-@<Generate all \eTeX...@>=
-primitive("expanded",convert,expanded_code);@/
-@!@:expanded_}{\.{\\expanded} primitive@>
-
 @ @<Declare \eTeX\ procedures for use by |main_control|@>=
 procedure scan_pdf_ext_toks;
 begin
@@ -50,4 +54,3 @@ end;
 
 @* \[54] System-dependent changes.
 @z
-

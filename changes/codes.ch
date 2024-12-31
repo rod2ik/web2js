@@ -13,11 +13,8 @@
 @d expanded_code = etex_convert_codes {command code for \.{\\expanded}}
 @d jstex_first_expand_code = expanded_code + 1 {base for \jsTeX's command codes}
 @d strcmp_code = jstex_first_expand_code + 0 {command code for \.{\\strcmp}}
-@d uchar_code = jstex_first_expand_code + 1 {command code for \.{\\Uchar}}
-@d ucharcat_code = jstex_first_expand_code + 2 {command code for \.{\\Ucharcat}}
-@d creationdate_code = jstex_first_expand_code + 3 {command code for \.{\\creationdate}}
-@d filesize_code = jstex_first_expand_code + 4 {command code for \.{\\filesize}}
-@d jstex_convert_codes = jstex_first_expand_code + 5 {end of \jsTeX's command codes}
+@d creationdate_code = jstex_first_expand_code + 1 {command code for \.{\\creationdate}}
+@d filesize_code = jstex_first_expand_code + 2 {command code for \.{\\filesize}}
+@d jstex_convert_codes = jstex_first_expand_code + 3 {end of \jsTeX's command codes}
 @d job_name_code=jstex_convert_codes {command code for \.{\\jobname}}
 @z
-

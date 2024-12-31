@@ -7,6 +7,14 @@ procedure@?ins_the_toks; forward;@t\2@>
 @z
 
 @x
+primitive("jobname",convert,job_name_code);@/
+@y
+primitive("filesize",convert,filesize_code);@/
+@!@:filesize_}{\.{\\filesize} primitive@>
+primitive("jobname",convert,job_name_code);@/
+@z
+
+@x
   othercases print_esc("jobname")
 @y
   filesize_code: print_esc("filesize");
@@ -43,25 +51,20 @@ job_name_code: print(job_name);
 @y
 @* \[53x] filesize macro
 
-@<Generate all \eTeX...@>=
-primitive("filesize",convert,filesize_code);@/
-@!@:filesize_}{\.{\\filesize} primitive@>
-
 @ @<Declare \eTeX\ procedures for use by |main_control|@>=
 procedure do_filesize; {to implement \.{\\filesize}}
 var s: str_number;
-    save_cur_cs: pointer;
 begin
-  call_func(scan_toks(false, true));
-  s:=tokens_to_string(def_ref);
+  scan_pdf_ext_toks;
+  s := tokens_to_string(def_ref);
   delete_token_ref(def_ref);
 
-  pack_file_name(s,"","");
+  pack_file_name(s, "", "");
 
   cur_val := getfilesize(name_of_file);
 
   flush_str(s);
-  cur_val_level:=int_val;
+  cur_val_level := int_val;
 end;
 
 @* \[54] System-dependent changes.

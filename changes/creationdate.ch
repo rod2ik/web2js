@@ -1,4 +1,12 @@
 @x
+primitive("jobname",convert,job_name_code);@/
+@y
+primitive("creationdate",convert,creationdate_code);@/
+@!@:creationdate_}{\.{\\creationdate} primitive@>
+primitive("jobname",convert,job_name_code);@/
+@z
+
+@x
   othercases print_esc("jobname")
 @y
   creationdate_code: print_esc("creationdate");
@@ -10,16 +18,4 @@ job_name_code: if job_name=0 then open_log_file;
 @y
 creationdate_code: cur_val:=sys_time;
 job_name_code: if job_name=0 then open_log_file;
-@z
-
-@x
-@* \[54] System-dependent changes.
-@y
-@* \[53x] creationdate
-
-@<Generate all \eTeX...@>=
-primitive("creationdate",convert,creationdate_code);@/
-@!@:creationdate_}{\.{\\creationdate} primitive@>
-
-@* \[54] System-dependent changes.
 @z

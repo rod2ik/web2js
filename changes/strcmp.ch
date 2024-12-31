@@ -6,6 +6,14 @@ procedure@?ins_the_toks; forward;@t\2@>
 @z
 
 @x
+primitive("jobname",convert,job_name_code);@/
+@y
+primitive("strcmp",convert,strcmp_code);@/
+@!@:strcmp_}{\.{\\strcmp} primitive@>
+primitive("jobname",convert,job_name_code);@/
+@z
+
+@x
   othercases print_esc("jobname")
 @y
   strcmp_code: print_esc("strcmp");
@@ -27,7 +35,7 @@ strcmp_code:
     scanner_status:=save_scanner_status;
     restore_cur_string;
   end;
-job_name_code: if job_name=0 then open_log_file;  
+job_name_code: if job_name=0 then open_log_file;
 @z
 
 @x
@@ -42,10 +50,6 @@ job_name_code: print(job_name);
 @* \[54] System-dependent changes.
 @y
 @* \[53x] strcmp macro
-
-@<Generate all \eTeX...@>=
-primitive("strcmp",convert,strcmp_code);@/
-@!@:strcmp_}{\.{\\strcmp} primitive@>
 
 @ @<Declare \eTeX\ procedures for use by |main_control|@>=
 procedure compare_strings; {to implement \.{\\strcmp}}
@@ -90,6 +94,3 @@ end;
 
 @* \[54] System-dependent changes.
 @z
-
-
-
