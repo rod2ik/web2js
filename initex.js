@@ -24,7 +24,8 @@ library.setInput(
         '\\documentclass[margin=0pt]{standalone}\n' +
         '\\def\\pgfsysdriver{pgfsys-ximera.def}\n' +
         '\\usepackage[svgnames]{xcolor}\n' +
-        '\\usepackage{tikz}\n\n',
+        '\\usepackage{tikz}\n\n' +
+        '\\DeclareGraphicsExtensions{}\n',
     () => {
         library.tex_final_end();
         const buffer = new Uint8Array(memory.buffer);
