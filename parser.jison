@@ -19,7 +19,7 @@ var ConstantDeclaration = require('./pascal/constant-declaration.js');
 var TypeDeclaration = require('./pascal/type-declaration.js');
 var VariableDeclaration = require('./pascal/variable-declaration.js');
 var RecordDeclaration = require('./pascal/record-declaration.js');
-var VariantDeclaration = require('./pascal/variant-declaration.js');  
+var VariantDeclaration = require('./pascal/variant-declaration.js');
 
 var Pointer = require('./pascal/pointer.js');
 var Desig = require('./pascal/desig.js');
@@ -52,7 +52,7 @@ var CallProcedure = require('./pascal/statements/call-procedure.js');
 var Compound = require('./pascal/statements/compound.js');
 
 var Identifier = require('./pascal/identifier.js');
-  
+
 %}
 
 %%
@@ -138,33 +138,33 @@ CONSTANT:
  CONSTANT_EXPRESS:
  	  UNARY_OP CONSTANT_EXPRESS %prec '*'
              { $$ = new UnaryOperation($1, $2);}
-         | CONSTANT_EXPRESS '+'          
+         | CONSTANT_EXPRESS '+'
            CONSTANT_EXPRESS              { $$ = new Operation('+', $1, $3);}
-         | CONSTANT_EXPRESS '-'          
+         | CONSTANT_EXPRESS '-'
            CONSTANT_EXPRESS              { $$ = new Operation('-', $1, $3);}
-         | CONSTANT_EXPRESS '*'          
+         | CONSTANT_EXPRESS '*'
            CONSTANT_EXPRESS              {$$ = new Operation('*', $1, $3); }
-         | CONSTANT_EXPRESS div      
+         | CONSTANT_EXPRESS div
            CONSTANT_EXPRESS              { $$ = new Operation('div', $1, $3);}
-         | CONSTANT_EXPRESS '='          
+         | CONSTANT_EXPRESS '='
            CONSTANT_EXPRESS              { $$ = new Operation('==', $1, $3);}
-         | CONSTANT_EXPRESS '<>'   
+         | CONSTANT_EXPRESS '<>'
            CONSTANT_EXPRESS              {$$ = new Operation('!=', $1, $3); }
-         | CONSTANT_EXPRESS mod      
+         | CONSTANT_EXPRESS mod
            CONSTANT_EXPRESS              { $$ = new Operation('%', $1, $3);}
-         | CONSTANT_EXPRESS '<'          
+         | CONSTANT_EXPRESS '<'
            CONSTANT_EXPRESS              { $$ = new Operation('<', $1, $3);}
-         | CONSTANT_EXPRESS '>'          
+         | CONSTANT_EXPRESS '>'
            CONSTANT_EXPRESS              { $$ = new Operation('>', $1, $3);}
-         | CONSTANT_EXPRESS '<='  
+         | CONSTANT_EXPRESS '<='
            CONSTANT_EXPRESS              {$$ = new Operation('<=', $1, $3); }
-         | CONSTANT_EXPRESS '>=' 
+         | CONSTANT_EXPRESS '>='
            CONSTANT_EXPRESS              {$$ = new Operation('>=', $1, $3); }
-         | CONSTANT_EXPRESS and      
+         | CONSTANT_EXPRESS and
            CONSTANT_EXPRESS              {$$ = new Operation('&&', $1, $3); }
-         | CONSTANT_EXPRESS or       
+         | CONSTANT_EXPRESS or
 CONSTANT_EXPRESS              { $$ = new Operation('||', $1, $3);}
-         | CONSTANT_EXPRESS '/'          
+         | CONSTANT_EXPRESS '/'
 CONSTANT_EXPRESS              {$$ = new Operation('/', $1, $3);}
          | CONST_FACTOR { $$ = $1; }
          ;
@@ -350,12 +350,12 @@ EXPRESS:
   | EXPRESS '<>' EXPRESS { $$ = new Operation( '!=', $1, $3 ); }
   | EXPRESS mod  EXPRESS { $$ = new Operation( '%', $1, $3 ); }
   | EXPRESS '<'  EXPRESS { $$ = new Operation( '<', $1, $3 ); }
-  | EXPRESS '>'  EXPRESS { $$ = new Operation( '>', $1, $3 ); }		
-  | EXPRESS '<=' EXPRESS { $$ = new Operation( '<=', $1, $3 ); }		
+  | EXPRESS '>'  EXPRESS { $$ = new Operation( '>', $1, $3 ); }
+  | EXPRESS '<=' EXPRESS { $$ = new Operation( '<=', $1, $3 ); }
   | EXPRESS '>='  EXPRESS { $$ = new Operation( '>=', $1, $3 ); }
   | EXPRESS and  EXPRESS { $$ = new Operation( '&&', $1, $3 ); }
   | EXPRESS or  EXPRESS { $$ = new Operation( '||', $1, $3 ); }
-  | EXPRESS '/' EXPRESS { $$ = new Operation( '/', $1, $3 ); }						
+  | EXPRESS '/' EXPRESS { $$ = new Operation( '/', $1, $3 ); }
   | FACTOR { $$ = $1; }
 ;
 

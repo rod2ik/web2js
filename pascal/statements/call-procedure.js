@@ -204,9 +204,7 @@ module.exports = class CallProcedure {
                     return module.nop();
                 }
 
-                // FIXME: Find out what this type really is that is coming through
-                // as an integer and correct this or fix the type resolution.
-                if (type.isInteger() && type.bytes() == 1) printer = 'printChar';
+                if (this.procedure.name === 'write' && type.isInteger() && type.bytes() == 1) printer = 'printChar';
                 else if (type.isInteger()) printer = 'printInteger';
                 else if (type.name === 'real') printer = 'printFloat';
                 else if (type.name === 'boolean') printer = 'printBoolean';
