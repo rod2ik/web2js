@@ -4,7 +4,8 @@
     "description": "Convert \"Pascal\" output of WEB into JavaScript",
     "author": "Jim Fowler",
     "contributors": [
-        "Glenn Rice"
+        "Glenn Rice",
+        "Rodrigo Schwencke"
     ],
     "license": "GPL-3.0",
     "main": "index.js",
