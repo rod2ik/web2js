@@ -199,7 +199,7 @@ module.exports = {
         if (path == undefined) {
             files.push({
                 filename: filename,
-                erstat: /\.(aux|log|dvi|tex)$/.test(filename) ? 1 : 0,
+                erstat: /\.(aux|log|dvi|tex|sty)$/.test(filename) ? 1 : 0,
                 eof: true
             });
             return files.length - 1;
