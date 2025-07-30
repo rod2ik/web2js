@@ -194,13 +194,16 @@ module.exports = {
             return files.length - 1;
         }
 
-        // Rodrigo
-        // if (filename.includes('tkz')) { 
-        //     console.log("================== TKZ-TAB DETECTED !! =========================");
-        //     console.log("FILENAME=", filename);
-        // }
-
         const path = kpse.findFile(filename, format);
+        
+        // Rodrigo
+        if (filename.includes('tkz')) { 
+            console.log("================== TKZ-TAB DETECTED !! =========================");
+            console.log("FILENAME=", filename);
+            console.log("PATH=", path);
+            console.log("FORMAT=", format);
+            console.log("===================")
+        }
 
         if (path == undefined) {
             files.push({
