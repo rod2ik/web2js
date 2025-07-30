@@ -25,6 +25,7 @@ library.setInput(
         '\\def\\pgfsysdriver{pgfsys-ximera.def}\n' +
         '\\usepackage[svgnames]{xcolor}\n' +
         '\\usepackage{tikz}\n\n' +
+        '\\usepackage{tkz-tab}\n\n' +
         '\\DeclareGraphicsExtensions{}\n',
     () => {
         library.tex_final_end();
