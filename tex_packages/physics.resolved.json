@@ -1,0 +1,12 @@
+{
+	"physics.sty": "/usr/share/texmf-dist/tex/latex/physics/physics.sty",
+	"xparse.sty": "/usr/share/texmf-dist/tex/latex/l3packages/xparse/xparse.sty",
+	"expl3.sty": "/usr/share/texmf-dist/tex/latex/l3kernel/expl3.sty",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def",
+	"amsmath.sty": "/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty",
+	"amstext.sty": "/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty",
+	"amsgen.sty": "/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty",
+	"amsbsy.sty": "/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty",
+	"amsopn.sty": "/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty",
+	"cmex7.tfm": "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm"
+}

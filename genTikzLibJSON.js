@@ -4,33 +4,94 @@ const path = require('path');
 const fs = require('fs');
 const spawnSync = require('child_process').spawnSync;
 
-const basePath = '/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries';
+const outputDir = 'tikz_libs';
 
-fs.mkdirSync('tikz_libs', { recursive: true });
+fs.mkdirSync(outputDir, { recursive: true });
+
+function kpsewhich(filename) {
+    const result = spawnSync('kpsewhich', [filename], {
+        encoding: 'utf8'
+    });
+
+    if (result.status !== 0) {
+        return null;
+    }
+
+    const foundPath = result.stdout.trim();
+
+    return foundPath.length > 0 ? foundPath : null;
+}
+
+function findTikzLibrariesBasePath() {
+    const knownLibrary = kpsewhich('tikzlibrarytopaths.code.tex');
+
+    if (!knownLibrary) {
+        console.error('Could not locate tikzlibrarytopaths.code.tex using kpsewhich.');
+        console.error('Please check that TeX Live / PGF / TikZ is installed correctly.');
+        process.exit(1);
+    }
+
+    return path.dirname(knownLibrary);
+}
+
+const basePath = findTikzLibrariesBasePath();
+
+console.log(`TikZ libraries base path: ${basePath}`);
 
 const processDir = (dir) => {
-    for (let file of fs.readdirSync(dir, { withFileTypes: true })) {
+    for (const file of fs.readdirSync(dir, { withFileTypes: true })) {
+        const fullPath = path.resolve(dir, file.name);
+
         if (file.isDirectory()) {
-            processDir(path.resolve(basePath, file.name));
-        } else if (file.name.match(/^tikzlibrary.*\.code\.tex$/)) {
-            let tikzLibName = file.name.replace(/^tikzlibrary(.*)\.code\.tex$/, '$1');
-            console.log(`Processing ${tikzLibName}`);
-            let texFile = `tikz_libs/${tikzLibName}.tex`;
-            if (!fs.existsSync(texFile)) {
-                console.log(`Creating ${texFile}`);
-                fs.writeFileSync(
-                    texFile,
-                    //'\\documentclass[margin=0pt]{standalone}\n\\usepackage{tikz}\n' +
-                    `\\usetikzlibrary{${tikzLibName}}\n\\begin{document}\n\\end{document}\n`
-                );
-            }
-            console.log(`Running TeX on ${texFile}`);
-            fs.writeFileSync(
-                `tikz_libs/${tikzLibName}.output.log`,
-                spawnSync('node', ['tex.js', texFile, 'y']).stdout.toString()
-            );
-            console.log(`TeX output saved to tikz_libs/${tikzLibName}.output.log`);
+            processDir(fullPath);
+            continue;
         }
+
+        if (!file.name.match(/^tikzlibrary.*\.code\.tex$/)) {
+            continue;
+        }
+
+        const tikzLibName = file.name.replace(/^tikzlibrary(.*)\.code\.tex$/, '$1');
+
+        console.log(`Processing ${tikzLibName}`);
+
+        const texFile = path.join(outputDir, `${tikzLibName}.tex`);
+
+        if (!fs.existsSync(texFile)) {
+            console.log(`Creating ${texFile}`);
+
+            fs.writeFileSync(
+                texFile,
+                [
+                    '%\\documentclass[margin=0pt]{standalone}',
+                    '%\\usepackage{tikz}',
+                    `\\usetikzlibrary{${tikzLibName}}`,
+                    '',
+                    '\\begin{document}',
+                    '\\end{document}',
+                    ''
+                ].join('\n')
+            );
+        }
+
+        console.log(`Running TeX on ${texFile}`);
+
+        const result = spawnSync('node', ['tex.js', texFile, 'y'], {
+            encoding: 'utf8'
+        });
+
+        const logFile = texFile.replace(/\.tex$/, '.output.log');
+
+        fs.writeFileSync(logFile, result.stdout + result.stderr);
+
+        if (result.status !== 0) {
+            console.error(`Failed while processing ${tikzLibName}`);
+            console.error(`TeX output saved to ${logFile}`);
+            process.exitCode = 1;
+            continue;
+        }
+
+        console.log(`TeX output saved to ${logFile}`);
     }
 };
 

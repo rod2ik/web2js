@@ -1,0 +1,10 @@
+[
+	"tikzlibrarydatavisualization.polar.code.tex",
+	"tikzlibrarydatavisualization.code.tex",
+	"pgfmoduledatavisualization.code.tex",
+	"pgfmoduleoo.code.tex",
+	"pgflibraryfpu.code.tex",
+	"tikzlibrarybackgrounds.code.tex",
+	"pgflibrarydatavisualization.polar.code.tex",
+	"l3backend-dvips.def"
+]

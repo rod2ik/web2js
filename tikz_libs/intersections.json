@@ -1,0 +1,6 @@
+[
+	"tikzlibraryintersections.code.tex",
+	"pgflibraryintersections.code.tex",
+	"pgflibraryfpu.code.tex",
+	"l3backend-dvips.def"
+]

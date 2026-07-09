@@ -1,0 +1,6 @@
+{
+	"tikzlibraryshapes.gates.logic.US.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.gates.logic.US.code.tex",
+	"pgflibraryshapes.gates.logic.US.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/circuits/pgflibraryshapes.gates.logic.US.code.tex",
+	"pgflibraryshapes.gates.logic.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/circuits/pgflibraryshapes.gates.logic.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

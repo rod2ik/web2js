@@ -1,0 +1,5 @@
+[
+	"tikzlibraryshapes.geometric.code.tex",
+	"pgflibraryshapes.geometric.code.tex",
+	"l3backend-dvips.def"
+]

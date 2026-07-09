@@ -1,0 +1,7 @@
+{
+	"chemfig.sty": "/usr/share/texmf-dist/tex/generic/chemfig/chemfig.sty",
+	"chemfig.tex": "/usr/share/texmf-dist/tex/generic/chemfig/chemfig.tex",
+	"simplekv.tex": "/usr/share/texmf-dist/tex/generic/simplekv/simplekv.tex",
+	"pgflibraryarrows.meta.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

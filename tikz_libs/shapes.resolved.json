@@ -1,0 +1,16 @@
+{
+	"tikzlibraryshapes.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.code.tex",
+	"tikzlibraryshapes.geometric.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex",
+	"pgflibraryshapes.geometric.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex",
+	"tikzlibraryshapes.misc.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex",
+	"pgflibraryshapes.misc.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex",
+	"tikzlibraryshapes.symbols.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.symbols.code.tex",
+	"pgflibraryshapes.symbols.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.symbols.code.tex",
+	"tikzlibraryshapes.arrows.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.arrows.code.tex",
+	"pgflibraryshapes.arrows.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.arrows.code.tex",
+	"tikzlibraryshapes.callouts.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.callouts.code.tex",
+	"pgflibraryshapes.callouts.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.callouts.code.tex",
+	"tikzlibraryshapes.multipart.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex",
+	"pgflibraryshapes.multipart.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

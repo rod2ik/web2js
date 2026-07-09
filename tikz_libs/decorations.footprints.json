@@ -1,0 +1,7 @@
+[
+	"tikzlibrarydecorations.footprints.code.tex",
+	"tikzlibrarydecorations.code.tex",
+	"pgfmoduledecorations.code.tex",
+	"pgflibrarydecorations.footprints.code.tex",
+	"l3backend-dvips.def"
+]

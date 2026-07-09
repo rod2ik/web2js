@@ -1,0 +1,14 @@
+{
+    "tkz-tab": {
+        "body": "\\begin{tikzpicture}\n\\tkzTabInit{$x$/1,$f'(x)$/1,$f(x)$/2}{$0$,$1$,$+\\infty$}\n\\tkzTabLine{,+,z,-,}\n\\tkzTabVar{-/$0$,+/$1$,-/$0$}\n\\end{tikzpicture}"
+    },
+    "physics": {
+        "body": "\\[\n\\dv{f}{x} = \\pdv{f}{x} + \\qty(\\frac{x^2}{2})\n\\]\n\\[\n\\vb{F}=m\\vb{a}\n\\]"
+    },
+    "circuitikz": {
+        "body": "\\begin{circuitikz}\n\\draw\n  (0,0) to[battery1,l=$V$] (0,2)\n        to[R,l=$R$] (3,2)\n        to[C,l=$C$] (3,0)\n        -- (0,0);\n\\end{circuitikz}"
+    },
+    "chemfig": {
+        "body": "\\chemfig{H-C(-[2]H)(-[6]H)-O-H}"
+    }
+}

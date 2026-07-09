@@ -1,0 +1,12 @@
+[
+	"physics.sty",
+	"xparse.sty",
+	"expl3.sty",
+	"l3backend-dvips.def",
+	"amsmath.sty",
+	"amstext.sty",
+	"amsgen.sty",
+	"amsbsy.sty",
+	"amsopn.sty",
+	"cmex7.tfm"
+]

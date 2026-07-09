@@ -1,0 +1,15 @@
+{
+	"tikzlibrarycircuits.ee.IEC.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/circuits/tikzlibrarycircuits.ee.IEC.code.tex",
+	"tikzlibraryarrows.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryarrows.code.tex",
+	"pgflibraryarrows.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.code.tex",
+	"tikzlibrarycircuits.ee.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/circuits/tikzlibrarycircuits.ee.code.tex",
+	"tikzlibrarycircuits.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/circuits/tikzlibrarycircuits.code.tex",
+	"tikzlibrarycalc.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex",
+	"tikzlibrarydecorations.markings.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.markings.code.tex",
+	"tikzlibrarydecorations.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex",
+	"pgfmoduledecorations.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex",
+	"pgflibrarydecorations.markings.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.markings.code.tex",
+	"pgflibraryshapes.gates.ee.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/circuits/pgflibraryshapes.gates.ee.code.tex",
+	"pgflibraryshapes.gates.ee.IEC.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/shapes/circuits/pgflibraryshapes.gates.ee.IEC.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

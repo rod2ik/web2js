@@ -25,7 +25,7 @@ library.setInput(
         '\\def\\pgfsysdriver{pgfsys-ximera.def}\n' +
         '\\usepackage[svgnames]{xcolor}\n' +
         '\\usepackage{tikz}\n\n' +
-        '\\usepackage{tkz-tab}\n\n' +
+        // '\\usepackage{tkz-tab}\n\n' +
         '\\DeclareGraphicsExtensions{}\n',
     () => {
         library.tex_final_end();
@@ -33,7 +33,7 @@ library.setInput(
         fs.writeFileSync('core.dump', buffer);
 
         // Save the files used to a json file.
-        let filesystem = library.getUsedFiles();
+        const filesystem = library.getUsedFiles();
         fs.writeFileSync('initex-files.json', JSON.stringify(filesystem, null, '\t'));
 
         process.exit();

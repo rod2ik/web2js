@@ -1,0 +1,7 @@
+{
+	"tikzlibrarybending.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybending.code.tex",
+	"pgfmodulebending.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmodulebending.code.tex",
+	"pgfmodulenonlineartransformations.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmodulenonlineartransformations.code.tex",
+	"pgflibrarycurvilinear.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibrarycurvilinear.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

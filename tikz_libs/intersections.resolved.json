@@ -1,0 +1,6 @@
+{
+	"tikzlibraryintersections.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryintersections.code.tex",
+	"pgflibraryintersections.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.code.tex",
+	"pgflibraryfpu.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}

@@ -1,0 +1,6 @@
+[
+	"tikzlibraryshapes.gates.logic.IEC.code.tex",
+	"pgflibraryshapes.gates.logic.IEC.code.tex",
+	"pgflibraryshapes.gates.logic.code.tex",
+	"l3backend-dvips.def"
+]

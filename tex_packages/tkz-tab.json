@@ -1,0 +1,9 @@
+[
+	"tkz-tab.sty",
+	"ifthen.sty",
+	"tikzlibraryarrows.code.tex",
+	"pgflibraryarrows.code.tex",
+	"tikzlibrarypatterns.code.tex",
+	"pgflibrarypatterns.code.tex",
+	"l3backend-dvips.def"
+]

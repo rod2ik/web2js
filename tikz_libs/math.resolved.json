@@ -1,0 +1,6 @@
+{
+	"tikzlibrarymath.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymath.code.tex",
+	"tikzlibraryfpu.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfpu.code.tex",
+	"pgflibraryfpu.code.tex": "/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex",
+	"l3backend-dvips.def": "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def"
+}
