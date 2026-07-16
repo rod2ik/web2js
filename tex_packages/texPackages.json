@@ -2,5 +2,9 @@
     "tkz-tab",
     "physics",
     "circuitikz",
-    "chemfig"
+    "chemfig",
+    "yquant",
+    "tikz-feynhand",
+    "pgf-spectra",
+    "kinematikz"
 ]

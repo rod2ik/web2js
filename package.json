@@ -1,6 +1,6 @@
 {
     "name": "web2js",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Convert \"Pascal\" output of WEB into JavaScript",
     "author": "Jim Fowler",
     "contributors": [
@@ -16,7 +16,6 @@
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
         "test": "node spec/run-tests.js",
-
         "build:parser": "jison parser.jison",
         "build:tie": "tie -m tex.web texk/tex.web $(cat changes/change-order)",
         "build:tangle": "tangle -underline tex.web",
@@ -25,14 +24,11 @@
         "build:asyncify-wasm": "wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect --pass-arg=asyncify-imports@library.reset,library.getfilesize -O4 out.wasm -o tex.wasm",
         "build:initex": "node initex.js",
         "build": "yarn build:parser && yarn build:wasm && yarn build:asyncify-wasm && yarn build:initex",
-
         "gen:tikz-libs": "node genTikzLibJSON.js",
         "gen:tikz-packages": "node genTikzPackagesJSON.js",
         "gen:tex-files": "node genTexFilesJSON.js",
         "gen:all": "yarn gen:tikz-libs && yarn gen:tikz-packages && yarn gen:tex-files",
-
         "build:all": "yarn build && yarn gen:all",
-
         "deploy:tikzjax:tex-files": "node deployTikzjaxTexFiles.js",
         "deploy:wasm:dump": "node deployWasmDump.js",
         "deploy:tikzjax": "yarn deploy:tikzjax:tex-files && yarn deploy:wasm:dump",
