@@ -1,0 +1,67 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tagged revision
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install JavaScript dependencies
+        run: yarn install --immutable
+
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          EXPECTED_TAG="v${VERSION}"
+          if [[ "$GITHUB_REF_NAME" != "$EXPECTED_TAG" ]]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $VERSION (expected $EXPECTED_TAG)." >&2
+            exit 1
+          fi
+
+      - name: Restore uncompressed core dump
+        run: gzip -dc dist/core.dump.gz > dist/core.dump
+
+      - name: Validate repository and runtime artifacts
+        run: |
+          yarn architecture:check
+          yarn validate:dist
+
+      - name: Create project ZIP
+        run: yarn zip
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          PROJECT_ZIP="../web2js-${VERSION}-project.zip"
+          gh release create "$GITHUB_REF_NAME" \
+            "$PROJECT_ZIP#Complete project ZIP" \
+            "dist/tex.wasm#TeX WebAssembly runtime" \
+            "dist/tex.wasm.gz#Compressed TeX WebAssembly runtime" \
+            "dist/core.dump#Initialized TeX memory dump" \
+            "dist/core.dump.gz#Compressed initialized TeX memory dump" \
+            --verify-tag \
+            --generate-notes \
+            --title "web2js ${GITHUB_REF_NAME}"

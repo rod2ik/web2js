@@ -22,13 +22,26 @@ spec/*.o
 tex_files/*.json
 tex_files/*.dvi
 tex_files/*.pdf
-initex-files.json
-parser.js
-core.dump
-latex.fmt
-*.wasm
-*.p
-!spec/*.p
-*.pool
-tex.web
+/initex-files.json
+/parser.js
+/core.dump
+/latex.fmt
+/*.wasm
+/*.p
+/*.pool
+/tex.web
 .vim
+
+# Refactored generated outputs
+/build/
+/public/
+site/.cache/
+
+# Final runtime artifacts live in dist/. The uncompressed core.dump is
+# intentionally not tracked by Git because it exceeds GitHub's 100 MiB
+# regular-Git object limit. core.dump.gz is the canonical tracked form and
+# release workflows reconstruct core.dump from it when needed.
+/dist/core.dump
+
+# Yarn Modern local install state/cache metadata
+.yarn/

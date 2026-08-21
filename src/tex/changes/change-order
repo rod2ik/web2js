@@ -1,0 +1,15 @@
+vendor/texlive/etexdir/etex.ch
+src/tex/changes/date.ch
+src/tex/changes/tex-final-end.ch
+src/tex/changes/ord-chr.ch
+src/tex/changes/tokens.ch
+src/tex/changes/inputln.ch
+src/tex/changes/codes.ch
+src/tex/changes/expanded.ch
+src/tex/changes/strcmp.ch
+src/tex/changes/creationdate.ch
+src/tex/changes/filesize.ch
+src/tex/changes/shellescape.ch
+src/tex/changes/wordsize.ch
+src/tex/changes/expand-depth-count.ch
+src/tex/changes/memory.ch

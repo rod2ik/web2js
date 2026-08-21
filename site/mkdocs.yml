@@ -1,0 +1,57 @@
+site_name: web2js
+site_description: Build the WebAssembly TeX runtime consumed by TikZJax
+site_url: https://rod2ik.github.io/web2js/
+repo_url: https://github.com/rod2ik/web2js
+repo_name: rod2ik/web2js
+
+docs_dir: docs
+site_dir: ../public
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Project architecture: architecture.md
+  - Build pipeline: build-pipeline.md
+  - Runtime artifacts: artifacts.md
+  - TikZJax integration: tikzjax-integration.md
+  - Development: development.md
+  - Publishing:
+      - GitHub Pages: publishing/github-pages.md
+      - GitHub Releases: publishing/releases.md
+      - Web2js then TikZJax: publishing/release-order.md
+  - Troubleshooting: troubleshooting.md
+  - Reference:
+      - Project layout: reference/project-layout.md
+      - Yarn commands: reference/yarn-commands.md
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true

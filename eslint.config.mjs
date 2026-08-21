@@ -4,7 +4,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import stylistic from '@stylistic/eslint-plugin';
 
 export default [
-    { ignores: ['parser.js'] },
+    { ignores: ['build/**', 'dist/**', 'public/**', 'vendor/**', 'parser.js'] },
     { files: ['**/*.{js,mjs,cjs,ts}'] },
     pluginJs.configs.recommended,
     {

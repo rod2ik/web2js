@@ -1,123 +1,82 @@
 # web2js
 
-This is a Pascal compiler that targets WebAssembly, designed specifically to compile TeX.
+`web2js` is the TeX build/compiler toolchain that produces the WebAssembly runtime consumed by [TikZJax](https://github.com/rod2ik/tikzjax).
 
-## Getting started
+Its primary deliverable is not an npm package. It is the four-file runtime contract:
 
-The following assumes you have TeX running on your machine (e.g., that `tangle` is available), and that you have the
-necessary TeX files installed on your system.
-
-A quick path to generate the `tex.wasm` and `core.dump` files is
-
-```sh
-npm install
-npm run build
+```text
+dist/
+├── tex.wasm
+├── tex.wasm.gz
+├── core.dump
+└── core.dump.gz
 ```
 
-Note that this is known to work with TeXLive 2023. A `Dockerfile` is included that provides a compatible Ubuntu 24.04
-system to work with. To build and run the docker container execute the following.
+Web2js owns compilation, TeX/LaTeX initialization and TeX-file metadata generation. TikZJax owns browser-side loading, configuration and rendering.
 
-```sh
-docker build -t web2js .
-docker run -it --rm -v `pwd`:/opt/web2js web2js
+## Quick start
+
+```bash
+yarn --version  # expected: 4.17.1
+yarn install --immutable
+yarn doctor
+yarn build
+yarn validate:dist
 ```
 
-Inside the container execute `npm run build` to generate the `tex.wasm` and `core.dump` files.
+For the most complete local validation:
 
-More details on the build process are below.
-
-Install node modules.
-
-```sh
-npm install
+```bash
+yarn bfc
 ```
 
-Generate the Pascal parser.
+To deploy the validated runtime and generated TeX file metadata into a sibling `../tikzjax` checkout:
 
-```sh
-npm run build:parser
+```bash
+yarn deploy:tikzjax
 ```
 
-The contents of the `texk` and `etexdir` subdirectories were simply copied from tug.org via
+## Documentation
 
-```sh
-mkdir texk
-rsync -a --delete --exclude=.svn tug.org::tldevsrc/Build/source/texk/web2c/tex.web texk
-rsync -a --delete --exclude=.svn tug.org::tldevsrc/Build/source/texk/web2c/etexdir .
+The documentation source lives in `site/`.
+
+```bash
+yarn dev
 ```
 
-Tie the TeX WEB source and e-TeX change file.
+For LAN access:
 
-```sh
-tie -m tex.web texk/tex.web etexdir/etex.ch date.ch tex-final-end.ch
+```bash
+yarn dev:lan
 ```
 
-Produce the Pascal source by tangling.
+The public documentation is deployed automatically to GitHub Pages after a push to `main`:
 
-```sh
-tangle -underline tex.web etex.sys
+```text
+https://rod2ik.github.io/web2js/
 ```
 
-You will now have the Pascal source `tex.p` along with `tex.pool` which contains the strings.
+The first Pages publication requires one repository setting: **Settings → Pages → Source → GitHub Actions**.
 
-Compile the `tex.p` sources to get the WebAssembly binary `out.wasm`.
+## Releases
 
-```sh
-node compile.js tex.p out.wasm
+After `package.json` contains the desired version and the validated changes have been committed/pushed:
+
+```bash
+git tag vX.Y.Z
+git push origin vX.Y.Z
 ```
 
-The above three commands can all be run with
+The tag automatically creates a GitHub Release with generated notes, a complete project ZIP and the four runtime artifacts.
 
-```sh
-npm run build:wasm
-```
+## Project structure
 
-Then optimize and asyncify the wasm binary by running
+- `src/` — maintained compiler/runtime source;
+- `vendor/texlive/` — imported TeX/e-TeX source material;
+- `scripts/` — build, generation, test and deployment tooling;
+- `build/` — disposable intermediate build files;
+- `dist/` — the four final TikZJax runtime artifacts;
+- `site/` — MkDocs documentation source;
+- `.github/workflows/` — automatic Pages and Release workflows.
 
-```sh
-wasm-opt --asyncify --pass-arg=asyncify-ignore-indirect \
-  --pass-arg=asyncify-imports@library.reset,library.getfilesize -O4 out.wasm -o tex.wasm
-```
-
-Note that if you want to unwind/rewind other imports in the library, add the imports to the asyncify-imports part in the
-above command.
-
-Produce the memory dump corresponding to the WebAssembly binary.
-
-```sh
-node initex.js
-```
-
-To test the assembly and core dump run
-
-```sh
-node tex.js tex_packages/pgfplots.tex
-```
-
-Remove `\\def\\pgfsysdriver{pgfsys-ximera.def}` from `initex.js`, re-run `node initex.js`, and compile
-`tex_packages/pgfplots.tex` by running
-
-```sh
-node tex.js tex_packages/pgfplots.tex
-```
-
-This will output `tex_packages/pgfplots.dvi`. Convert to pdf to view using `dvipdf` (or `dvips` and `ps2pdf`).
-
-Alternately change
-
-```js
-library.setInput("\n&latex\n\\documentclass...\n\n",
-```
-
-in `initex.js` to
-
-```js
-library.setInput("\n&latex\n\n",
-```
-
-to generate a general latex compiler. To use it uncomment the first two lines of `tex_packages/pgfplots.tex.tex`, and
-run
-
-```sh
-node tex.js tex_packages/pgfplots.tex
-```
+For the full architecture and the Web2js ↔ TikZJax workflow, see the MkDocs documentation.
