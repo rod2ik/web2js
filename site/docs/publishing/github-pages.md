@@ -21,10 +21,9 @@ git push
 .github/workflows/pages.yml
    │
    ├── checkout
-   ├── Node.js + Yarn 4.17.1
-   ├── yarn install --immutable
+   ├── Node.js
    ├── Python + MkDocs dependencies
-   ├── yarn build:docs
+   ├── node scripts/build-docs.mjs
    ├── upload public/
    ▼
 GitHub Pages
@@ -49,15 +48,29 @@ Settings
 
 After that one-time setting, pushes to `main` are sufficient. The workflow can also be started manually from the **Actions** tab because it supports `workflow_dispatch`.
 
-## What Pages builds
+## Why Pages does not run `yarn install`
 
-The Pages workflow does **not** rebuild TeX, WebAssembly, `core.dump`, or the TikZJax runtime. It builds only the documentation from `site/`:
+The full Web2js JavaScript dependency graph includes `node-kpathsea`, a native binding used by the compiler/runtime toolchain. Building that dependency requires native TeX/Kpathsea development libraries.
+
+GitHub Pages does not compile Web2js. It only builds the MkDocs site, so installing the full JavaScript dependency graph would be unnecessary, slow, and fragile.
+
+For that reason the Pages workflow deliberately does **not** run:
 
 ```bash
-yarn build:docs
+yarn install --immutable
 ```
 
-This is intentional. Documentation publication should remain fast and should not require the full TeX WEB toolchain on GitHub-hosted runners.
+Instead, it installs only the Python documentation dependencies and invokes the dependency-free Node wrapper directly:
+
+```bash
+node scripts/build-docs.mjs
+```
+
+Local development still uses the normal Yarn workflow and `yarn install --immutable` as documented elsewhere.
+
+## What Pages builds
+
+The Pages workflow does **not** rebuild TeX, WebAssembly, `core.dump`, or the TikZJax runtime. It builds only the documentation from `site/`.
 
 The generated site is written to:
 

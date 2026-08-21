@@ -22,12 +22,9 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install JavaScript dependencies
-        run: yarn install --immutable
-
+      # No `yarn install` is needed here. The release workflow validates and
+      # packages already-built runtime artifacts; all scripts invoked below
+      # use only Node.js built-ins plus standard runner tools.
       - name: Verify tag matches package version
         shell: bash
         run: |
@@ -41,13 +38,14 @@ jobs:
       - name: Restore uncompressed core dump
         run: gzip -dc dist/core.dump.gz > dist/core.dump
 
-      - name: Validate repository and runtime artifacts
-        run: |
-          yarn architecture:check
-          yarn validate:dist
+      - name: Validate repository architecture
+        run: node scripts/architecture-check.mjs
+
+      - name: Validate runtime artifacts
+        run: node scripts/build/validate-dist.mjs
 
       - name: Create project ZIP
-        run: yarn zip
+        run: node scripts/create-project-zip.mjs
 
       - name: Create GitHub Release
         env:

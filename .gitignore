@@ -45,3 +45,6 @@ site/.cache/
 
 # Yarn Modern local install state/cache metadata
 .yarn/
+
+# Generated project archives
+/web2js-*-project*.zip

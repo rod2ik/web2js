@@ -27,12 +27,6 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install JavaScript dependencies
-        run: yarn install --immutable
-
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -43,8 +37,12 @@ jobs:
       - name: Install documentation dependencies
         run: python -m pip install -r site/requirements.txt
 
+      # Deliberately do not run `yarn install` here. The full Web2js
+      # dependency graph contains native node-kpathsea bindings needed by
+      # the compiler/runtime toolchain, but the documentation build only
+      # needs this dependency-free Node wrapper around MkDocs.
       - name: Build documentation
-        run: yarn build:docs
+        run: node scripts/build-docs.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

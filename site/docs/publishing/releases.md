@@ -2,6 +2,22 @@
 
 A pushed version tag creates a GitHub Release automatically.
 
+## Single source of truth for the version
+
+The project version has one canonical source:
+
+```text
+package.json → version
+```
+
+For example:
+
+```json
+"version": "1.0.4"
+```
+
+The Git tag must be exactly that version prefixed with `v`.
+
 ## Required order
 
 First update `package.json` to the release version and validate the project. For example, for version `1.0.4`:
@@ -34,14 +50,22 @@ git push origin v1.0.4
 .github/workflows/release.yml
    │
    ├── verify tag == v + package.json version
-   ├── yarn install --immutable
-   ├── yarn architecture:check
-   ├── yarn validate:dist
-   ├── yarn zip
+   ├── reconstruct dist/core.dump from dist/core.dump.gz
+   ├── node scripts/architecture-check.mjs
+   ├── node scripts/build/validate-dist.mjs
+   ├── node scripts/create-project-zip.mjs
    ├── generate release notes
    ▼
 GitHub Release
 ```
+
+## Why the Release workflow does not run `yarn install`
+
+The Release workflow does not compile Web2js from source. It validates and packages the runtime that was already built and tested locally before the tag was created.
+
+The scripts used by the workflow rely only on Node.js built-ins and standard GitHub runner tools. Installing the full Yarn dependency graph would unnecessarily compile the native `node-kpathsea` dependency and require the TeX/Kpathsea development environment.
+
+Therefore the Release workflow deliberately avoids `yarn install`.
 
 ## Release assets
 
@@ -80,12 +104,14 @@ A full Web2js runtime build depends on the TeX WEB toolchain and on the exact Te
 ```text
 local development machine
    │
+   ├── yarn install --immutable
    ├── yarn bfc
    ├── inspect/test the resulting runtime
    ├── commit the validated trackable dist/ artifacts (`core.dump.gz`, not raw `core.dump`)
    ▼
 GitHub tag
    │
+   ├── reconstruct raw core.dump
    ├── validate committed artifacts
    ▼
 GitHub Release
